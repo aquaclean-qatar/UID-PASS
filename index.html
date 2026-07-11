@@ -47,26 +47,31 @@
   header.top{
     display:flex;
     align-items:center;
-    gap:14px;
+    gap:16px;
     margin-bottom: 36px;
+    flex-wrap: wrap;
   }
 
-  .mark{
-    width: 42px; height: 42px;
-    border-radius: 11px;
-    background: linear-gradient(155deg, var(--aqua), var(--teal-deep));
-    position: relative;
-    flex-shrink: 0;
-    box-shadow: 0 4px 14px rgba(14,124,134,0.35);
+  .logos{
+    display:flex;
+    align-items:center;
+    gap: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 14px;
+    box-shadow: var(--shadow);
   }
-  .mark::before{
-    content:"";
-    position:absolute;
-    top:50%; left:50%;
-    width: 16px; height: 16px;
-    transform: translate(-50%,-58%) rotate(45deg);
-    border-radius: 0 60% 60% 60%;
-    background: rgba(255,255,255,0.92);
+  .logo-img{
+    height: 30px;
+    width: auto;
+    object-fit: contain;
+    display:block;
+  }
+  .logo-divider{
+    width: 1px;
+    height: 22px;
+    background: var(--border);
   }
 
   .brand h1{
@@ -382,13 +387,22 @@
     font-weight: 600;
   }
   footer a:hover{ text-decoration: underline; }
+  footer .credit{
+    margin-top: 6px;
+    color: #A9BABC;
+    font-size: 11px;
+  }
 </style>
 </head>
 <body>
 
 <div class="lock-screen" id="lockScreen">
   <div class="lock-card">
-    <div class="mark" aria-hidden="true" style="margin:0 auto 18px;"></div>
+    <div class="logos" style="justify-content:center; margin:0 auto 18px;">
+      <img src="https://i.imgur.com/y2wOlu7.png" alt="Aqua Clean" class="logo-img" onerror="this.style.display='none'">
+      <span class="logo-divider" aria-hidden="true"></span>
+      <img src="https://i.imgur.com/o7BC5Pn.png" alt="Olkite" class="logo-img" onerror="this.style.display='none'">
+    </div>
     <h2>Aqua Clean</h2>
     <p>Enter the password to open the payslip directory</p>
     <form id="lockForm" autocomplete="off">
@@ -401,7 +415,11 @@
 
 <div class="wrap" id="mainApp" style="display:none;">
   <header class="top">
-    <div class="mark" aria-hidden="true"></div>
+    <div class="logos">
+      <img src="https://i.imgur.com/y2wOlu7.png" alt="Aqua Clean" class="logo-img aqua-logo" onerror="this.style.display='none'">
+      <span class="logo-divider" aria-hidden="true"></span>
+      <img src="https://i.imgur.com/o7BC5Pn.png" alt="Olkite" class="logo-img olkite-logo" onerror="this.style.display='none'">
+    </div>
     <div class="brand">
       <h1>Aqua Clean</h1>
       <p>Payslip lookup &amp; UID directory</p>
@@ -422,7 +440,9 @@
 
   <div id="results"></div>
 
-  <footer>Employee directory · click a result to copy the payslip message · <a href="#" id="logoutLink">Log out</a></footer>
+  <footer>Employee directory · click a result to copy the payslip message · <a href="#" id="logoutLink">Log out</a>
+    <div class="credit">© <span id="curYear"></span> | Developed by Hassan.</div>
+  </footer>
 </div>
 
 <div class="toast" id="toast">
@@ -518,12 +538,13 @@ function highlight(text, term){
 }
 
 function buildMessage(emp){
-  const link = 'https://aquaclean-qatar.github.io/payslip/' + emp.uid;
+  const link = 'https://aquaclean-qatar.github.io/payslip';
   return `*Aqua Clean Payslip*
 Dear ${emp.name} (EMP ID: ${emp.id}),
 Your payslip is now available.
-To view your payslip, click: ${link}
-UID: ${emp.uid}
+To view your payslip, 
+click: ${link}
+*UID:* ${emp.uid}
 ⚠️ _For your security, never share your UID with anyone._`;
 }
 
@@ -654,6 +675,9 @@ function fallbackCopy(text, cb){
 
 qInput.addEventListener('input', render);
 clearBtn.addEventListener('click', () => { qInput.value=''; qInput.focus(); render(); });
+
+const yearEl = document.getElementById('curYear');
+if(yearEl) yearEl.textContent = new Date().getFullYear();
 
 render();
 </script>
