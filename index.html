@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aqua Clean — Payslip Lookup</title>
 <meta name="robots" content="noindex, nofollow">
+<!-- Import Inter font for a modern look -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg: #F3F8F8;
@@ -30,7 +34,8 @@
       radial-gradient(circle at 12% -10%, rgba(23,182,196,0.10), transparent 45%),
       radial-gradient(circle at 90% 0%, rgba(14,124,134,0.08), transparent 40%);
     color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    /* Improved font stack with Inter */
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
   }
@@ -38,7 +43,19 @@
   .wrap{
     max-width: 720px;
     margin: 0 auto;
-    padding: 48px 20px 80px;
+    padding: 0 20px 80px; /* Reduced top padding since header is sticky */
+  }
+
+  /* Sticky Header and Search Bar Container */
+  .sticky-top {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    padding: 14px 20px;
+    margin: 0 -20px 24px;
+    border-bottom: 1px solid var(--border);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
   }
 
   header.top{
@@ -46,15 +63,16 @@
     align-items:center;
     justify-content: space-between;
     gap:14px;
-    margin-bottom: 36px;
+    margin-bottom: 16px;
   }
 
   .logo-img{
-    height: 36px;
+    height: 32px; /* Increased from 22px */
     width: auto;
     object-fit: contain;
     display:block;
     flex-shrink: 0;
+    /* Removed the black filter: brightness(0) saturate(100%) */
   }
 
   .brand{
@@ -63,11 +81,11 @@
     min-width: 0;
   }
   .brand h1{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight:800;
-    font-size: 19px;
-    font-weight: 700;
-    letter-spacing: -0.01em;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: -0.02em;
     line-height: 1.1;
+    color: var(--teal); /* Brand color for title */
   }
   .brand p{
     font-size: 12.5px;
@@ -106,7 +124,7 @@
     border: none;
     background: transparent;
     outline: none;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: inherit;
     font-size: 16.5px;
     font-weight: 500;
     color: var(--ink);
@@ -136,7 +154,7 @@
     display:flex;
     justify-content: space-between;
     align-items:center;
-    margin-top: 12px;
+    margin-top: 10px;
     padding: 0 4px;
     font-size: 12.5px;
     color: var(--ink-soft);
@@ -160,12 +178,16 @@
     align-items:center;
     justify-content: space-between;
     gap: 12px;
-    transition: border-color .12s ease, box-shadow .12s ease;
+    cursor: pointer;
+    transition: border-color .12s ease, box-shadow .12s ease, transform .12s ease;
     animation: rise .14s ease both;
   }
   .row:hover{
     border-color: var(--teal);
     box-shadow: var(--shadow);
+  }
+  .row:active{
+    transform: scale(0.995);
   }
 
   .row.copied{
@@ -178,16 +200,22 @@
     to{ opacity:1; transform: translateY(0); }
   }
 
-  .row-left{ min-width:0; }
+  .row-left{ min-width:0; flex: 1; }
 
   .name{
-    font-weight: 600;
-    font-size: 15px;
+    font-weight: 700;
+    font-size: 16px;
     color: var(--ink);
     white-space: nowrap;
     overflow:hidden;
     text-overflow: ellipsis;
+    padding: 4px 0;
+    cursor: copy; /* Visual hint for copyable */
+    display: inline-block;
+    max-width: 100%;
   }
+  .name:hover { color: var(--teal); }
+
   .name mark, .idchip mark{
     background: rgba(23,182,196,0.22);
     color: var(--teal-deep);
@@ -197,21 +225,26 @@
 
   .chips{
     display:flex;
-    gap: 6px;
+    gap: 8px;
     margin-top: 6px;
     flex-wrap: wrap;
   }
   .idchip{
-    font-family: ui-monospace, SFMono-Regular, 'Courier New', monospace;
-    font-size: 11.5px;
-    font-weight: 500;
+    font-family: 'Inter', ui-monospace, SFMono-Regular, 'Courier New', monospace;
+    font-size: 12px;
+    font-weight: 600;
     color: var(--teal-deep);
     background: var(--surface-2);
     border-radius: 6px;
-    padding: 3px 7px;
+    padding: 4px 10px;
     letter-spacing: 0.01em;
+    cursor: copy; /* Visual hint for copyable */
+    transition: background 0.1s;
   }
-  .idchip.uid{ color: var(--teal-deep); }
+  .idchip:hover {
+    background: var(--border);
+  }
+  .idchip.uid{ color: var(--teal-deep); border: 1px solid rgba(14, 124, 134, 0.2); }
 
   .copy-btn{
     flex-shrink:0;
@@ -222,9 +255,9 @@
     color: #fff;
     border: none;
     border-radius: 9px;
-    padding: 9px 14px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    font-size: 13px;
+    padding: 10px 16px;
+    font-family: inherit;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
     transition: background .12s ease;
@@ -232,7 +265,7 @@
   }
   .copy-btn:hover{ background: var(--teal-deep); }
   .row.copied .copy-btn{ background: var(--success); }
-  .copy-btn svg{ width:14px; height:14px; }
+  .copy-btn svg{ width:16px; height:16px; }
 
   .empty, .hint{
     text-align:center;
@@ -257,8 +290,9 @@
   footer{
     text-align:center;
     margin-top: 40px;
-    font-size: 11.5px;
+    font-size: 12px;
     color: #8BA0A3;
+    padding-bottom: 40px;
   }
 
   .toast{
@@ -279,7 +313,7 @@
     pointer-events: none;
     transition: opacity .2s ease, transform .2s ease;
     box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-    z-index: 10;
+    z-index: 1000;
   }
   .toast.show{
     opacity: 1;
@@ -288,12 +322,13 @@
   .toast svg{ width:16px; height:16px; stroke: var(--aqua); flex-shrink:0; }
 
   @media (max-width: 480px){
-    .wrap{ padding: 32px 14px 60px; }
+    .wrap{ padding: 0 14px 60px; }
+    .sticky-top { padding: 12px 14px; margin: 0 -14px 20px; }
     .row{ flex-direction: column; align-items: flex-start; }
-    .copy-btn{ width: 100%; justify-content:center; margin-top: 2px; }
+    .copy-btn{ width: 100%; justify-content:center; margin-top: 6px; }
     .logo-img{ height: 26px; }
-    .brand h1{ font-size: 15.5px; }
-    .brand p{ font-size: 10.5px; }
+    .brand h1{ font-size: 18px; }
+    .brand p{ font-size: 11px; }
   }
 
   @media (prefers-reduced-motion: reduce){
@@ -320,10 +355,10 @@
     text-align:center;
   }
   .lock-card h2{
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; font-weight:800;
-    font-size: 19px;
-    font-weight: 700;
+    font-weight: 800;
+    font-size: 20px;
     margin-bottom: 6px;
+    color: var(--teal);
   }
   .lock-card p{
     font-size: 13px;
@@ -341,7 +376,7 @@
     border-radius: 10px;
     padding: 12px 14px;
     font-size: 15px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: inherit;
     outline:none;
     text-align:center;
     letter-spacing: 0.02em;
@@ -356,7 +391,7 @@
     padding: 12px 14px;
     font-size: 14.5px;
     font-weight: 600;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: inherit;
     cursor:pointer;
     transition: background .12s ease;
   }
@@ -377,7 +412,7 @@
   }
   footer a:hover{ text-decoration: underline; }
   footer .credit{
-    margin-top: 6px;
+    margin-top: 8px;
     color: #A9BABC;
     font-size: 11px;
   }
@@ -389,7 +424,7 @@
   <div class="lock-card">
     <div style="display:flex; align-items:center; justify-content:center; gap:14px; margin:0 auto 18px;">
       <img src="https://i.imgur.com/y2wOlu7.png" alt="Aqua Clean" class="logo-img" onerror="this.style.display='none'">
-      <img src="https://i.imgur.com/o7BC5Pn.png" alt="Olkite" class="logo-img" onerror="this.style.display='none'">
+      <img src="https://i.imgur.com/o7BC5Pn.png" alt="Olkite" class="logo-img olkite-logo" onerror="this.style.display='none'">
     </div>
     <h2>Aqua Clean</h2>
     <p>Enter the password to open the payslip directory</p>
@@ -402,24 +437,26 @@
 </div>
 
 <div class="wrap" id="mainApp" style="display:none;">
-  <header class="top">
-    <img src="https://i.imgur.com/y2wOlu7.png" alt="Aqua Clean" class="logo-img" onerror="this.style.display='none'">
-    <div class="brand">
-      <h1>Aqua Clean</h1>
-      <p>Payslip lookup &amp; UID directory</p>
-    </div>
-    <img src="https://i.imgur.com/o7BC5Pn.png" alt="Olkite" class="logo-img" onerror="this.style.display='none'">
-  </header>
+  <div class="sticky-top">
+    <header class="top">
+      <img src="https://i.imgur.com/y2wOlu7.png" alt="Aqua Clean" class="logo-img" onerror="this.style.display='none'">
+      <div class="brand">
+        <h1>Aqua Clean</h1>
+        <p>Payslip lookup &amp; UID directory</p>
+      </div>
+      <img src="https://i.imgur.com/o7BC5Pn.png" alt="Olkite" class="logo-img olkite-logo" onerror="this.style.display='none'">
+    </header>
 
-  <div class="search-shell">
-    <div class="search-box">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-      <input id="q" type="text" placeholder="Search name, employee ID, or UID…" autocomplete="off" autofocus>
-      <button class="clear-btn" id="clearBtn" aria-label="Clear search">✕</button>
-    </div>
-    <div class="meta-row">
-      <span id="countLabel" class="count"></span>
-      <span id="totalLabel"></span>
+    <div class="search-shell">
+      <div class="search-box">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input id="q" type="text" placeholder="Search name, employee ID, or UID…" autocomplete="off" autofocus>
+        <button class="clear-btn" id="clearBtn" aria-label="Clear search">✕</button>
+      </div>
+      <div class="meta-row">
+        <span id="countLabel" class="count"></span>
+        <span id="totalLabel"></span>
+      </div>
     </div>
   </div>
 
@@ -442,6 +479,20 @@
   const SESSION_KEY = "aquaclean_session_expiry";
   const SESSION_LENGTH_MS = 5 * 24 * 60 * 60 * 1000; // 5 days
 
+  let memoryFallback = null;
+  function storageGet(key){
+    try{ return window.localStorage.getItem(key); }
+    catch(e){ return memoryFallback; }
+  }
+  function storageSet(key, val){
+    try{ window.localStorage.setItem(key, val); }
+    catch(e){ memoryFallback = val; }
+  }
+  function storageRemove(key){
+    try{ window.localStorage.removeItem(key); }
+    catch(e){ memoryFallback = null; }
+  }
+
   const lockScreen = document.getElementById('lockScreen');
   const mainApp = document.getElementById('mainApp');
   const lockForm = document.getElementById('lockForm');
@@ -449,31 +500,25 @@
   const lockError = document.getElementById('lockError');
 
   function isSessionValid(){
-    const expiry = localStorage.getItem(SESSION_KEY);
+    const expiry = storageGet(SESSION_KEY);
     if(!expiry) return false;
     return Date.now() < parseInt(expiry, 10);
   }
 
   function grantAccess(){
-    localStorage.setItem(SESSION_KEY, String(Date.now() + SESSION_LENGTH_MS));
+    storageSet(SESSION_KEY, String(Date.now() + SESSION_LENGTH_MS));
     lockScreen.style.display = 'none';
     mainApp.style.display = '';
-    document.getElementById('q') && document.getElementById('q').focus();
+    const q = document.getElementById('q');
+    if(q) q.focus();
   }
 
   function showLock(){
-    localStorage.removeItem(SESSION_KEY);
+    storageRemove(SESSION_KEY);
     mainApp.style.display = 'none';
     lockScreen.style.display = 'flex';
     pwInput.value = '';
     pwInput.focus();
-  }
-
-  if(isSessionValid()){
-    lockScreen.style.display = 'none';
-    mainApp.style.display = '';
-  }else{
-    showLock();
   }
 
   lockForm.addEventListener('submit', function(e){
@@ -495,70 +540,353 @@
       showLock();
     });
   }
+
+  try{
+    if(isSessionValid()){
+      lockScreen.style.display = 'none';
+      mainApp.style.display = '';
+    }else{
+      showLock();
+    }
+  }catch(e){
+    showLock();
+  }
 })();
 
-const DATA = [{"uid":"OA6YU","id":"ACW056","name":"SURESH GURANG"},{"uid":"OAKZX","id":"ACW1023","name":"RAJANIKANTH NALLARAJA"},{"uid":"OARFU","id":"ACW1062","name":"RAMNAIN LODH"},{"uid":"OAIO7","id":"ACW1074","name":"SANTOSH SAH"},{"uid":"OAKDH","id":"ACW1081","name":"RADHIKA SITAULA"},{"uid":"OA0QK","id":"ACW1082","name":"MAN RAI LIMBU"},{"uid":"OACEE","id":"ACW1111","name":"THARANIRAJ KANNAN"},{"uid":"OANUU","id":"ACW1149","name":"PRAKASH GAULI"},{"uid":"OAE20","id":"ACW1188","name":"IBRAHIM MIYA"},{"uid":"OAF4G","id":"ACW1232","name":"KALPANA SAMBAHAMPHE"},{"uid":"OAS56","id":"ACW1251","name":"DIPEN RAI"},{"uid":"OAG71","id":"ACW1274","name":"BIKASH ROKA"},{"uid":"OASEJ","id":"ACW1298","name":"KUL KAMI KALIKOTE"},{"uid":"OA3FN","id":"ACW1342","name":"ANIL CHAN"},{"uid":"OAEO2","id":"ACW1345","name":"FIRDOS SIDDIQUI"},{"uid":"OA9Q8","id":"ACW1358","name":"BIPIN GURAGAIN"},{"uid":"OATQN","id":"ACW1370","name":"TIKA RAI"},{"uid":"OALEW","id":"ACW1390","name":"HANSHRAJ DHAMI"},{"uid":"OASP3","id":"ACW1423","name":"NAVAREDNAM VANNIYASINGAM"},{"uid":"OAUPH","id":"ACW1469","name":"MD BEPARY"},{"uid":"OA99K","id":"ACW1549","name":"MD HOSSAIN"},{"uid":"OAJOD","id":"ACW1618","name":"AMBRESH YADAV"},{"uid":"OA58S","id":"ACW1620","name":"UMESH MAHARA"},{"uid":"OA8ZD","id":"ACW1658","name":"BIR BAHADUR BISHWAKARMA"},{"uid":"OAQLC","id":"ACW1663","name":"DHARMENDRA RAY"},{"uid":"OARP2","id":"ACW1679","name":"SANJAY PASMAN"},{"uid":"OAT9G","id":"ACW1718","name":"SEKANATHAN THAMOTHARAN"},{"uid":"OAI5R","id":"ACW1762","name":"BHESH KHADKA"},{"uid":"OA0YQ","id":"ACW1769","name":"BIMALA BHATTARAI"},{"uid":"OAKNP","id":"ACW1844","name":"PREM KHATRI"},{"uid":"OAOBA","id":"ACW1877","name":"PRAGATI LAMA"},{"uid":"OACYE","id":"ACW1886","name":"THAYAPARAN KRISHNAPILLAI"},{"uid":"OAYBB","id":"ACW1895","name":"SIVAPARAN SIVARASA"},{"uid":"OA4DD","id":"ACW1911","name":"LALITA MAGAR"},{"uid":"OASIB","id":"ACW1959","name":"SHARAFAT ALI"},{"uid":"OA9R7","id":"ACW1965","name":"RAMU SARBARIYA"},{"uid":"OAO7Y","id":"ACW1988","name":"SAFIKUL MANSURI"},{"uid":"OAJDN","id":"ACW2026","name":"SAPANA MAGAR"},{"uid":"OAEYR","id":"ACW2048","name":"UMA BHUJEL"},{"uid":"OAMEH","id":"ACW2077","name":"BABO SHAFIQUE RAHMAN"},{"uid":"OA1S8","id":"ACW2078","name":"TANVIR SIDDIKI"},{"uid":"OACVY","id":"ACW2089","name":"GANGA RAI"},{"uid":"OAGM8","id":"ACW213","name":"SUTHAKARAN THIYAGARASA"},{"uid":"OAJZ6","id":"ACW2206","name":"RAM KAMAIT"},{"uid":"OARCX","id":"ACW2246","name":"KHAMISI CHARO"},{"uid":"OAI8B","id":"ACW2250","name":"RUPESH MANDAL"},{"uid":"OAQMB","id":"ACW2353","name":"SANGITA LIMBU"},{"uid":"OAWTR","id":"ACW2357","name":"INDRAJIT SAH"},{"uid":"OASYW","id":"ACW2376","name":"LAXMI MAGAR"},{"uid":"OAO8G","id":"ACW2399","name":"SHAHALAM ALIM UDDIN MIAH"},{"uid":"OA08F","id":"ACW2402","name":"MOHAMMAD KHAN"},{"uid":"OAKF7","id":"ACW2415","name":"SACHIN RAI"},{"uid":"OAVPY","id":"ACW2425","name":"DIPENDRA RAM"},{"uid":"OA234","id":"ACW2495","name":"IHTISHAM HAQ"},{"uid":"OA5KG","id":"ACW2508","name":"KABEER AHMED"},{"uid":"OACBC","id":"ACW2510","name":"JULIUS BIWOTT"},{"uid":"OAKM5","id":"ACW2523","name":"SANJIV RAM"},{"uid":"OA3MD","id":"ACW2527","name":"COLLINS KIMUTAI"},{"uid":"OAGTI","id":"ACW2536","name":"SHABIR HUSAIN HUSSAIN ZAHID"},{"uid":"OABT0","id":"ACW2547","name":"AVINASH DAS"},{"uid":"OAKCT","id":"ACW2551","name":"RAJ MUKHIYA"},{"uid":"OA95I","id":"ACW2557","name":"RAM RAY"},{"uid":"OARZU","id":"ACW2558","name":"SHATARUDHAN SAH"},{"uid":"OANSF","id":"ACW2606","name":"HASNAIN ZAFAR"},{"uid":"OAVNY","id":"ACW2618","name":"JAFIR RANGREJ"},{"uid":"OAJ8S","id":"ACW2638","name":"OSAMA IHSAN"},{"uid":"OARK6","id":"ACW2642","name":"MUHAMMAD RAUF ABDUL"},{"uid":"OADR6","id":"ACW2657","name":"THADEUS AYEGA"},{"uid":"OAQHK","id":"ACW2666","name":"KENNETH KIMELI"},{"uid":"OA4T0","id":"ACW2681","name":"BETHWEL LETTING"},{"uid":"OAE83","id":"ACW2719","name":"PRAWEJ SHEKH"},{"uid":"OAO3E","id":"ACW2733","name":"USMAN ALI ALI RIASAT"},{"uid":"OAYDQ","id":"ACW2734","name":"SANA HASSAN GUL"},{"uid":"OAL5K","id":"ACW2751","name":"SUBODH YADAV"},{"uid":"OAURL","id":"ACW2752","name":"DEVSHARAN YADAV"},{"uid":"OAYXU","id":"ACW2773","name":"USMAN TAJ AYEEN"},{"uid":"OAL1E","id":"ACW2794","name":"ANOJ MANDAL"},{"uid":"OAGB9","id":"ACW2838","name":"DENNIS MWANGI"},{"uid":"OA9N5","id":"ACW2843","name":"SUNIL RAY"},{"uid":"OA5TQ","id":"ACW2895","name":"AMMAD KHALID MEHMOOD"},{"uid":"OA18H","id":"ACW2896","name":"ADEEB REHMAN NAZIR AHMED"},{"uid":"OAY4X","id":"ACW2923","name":"MANISH YADAV"},{"uid":"OALJO","id":"ACW2926","name":"GHULAM BAIG"},{"uid":"OAVC0","id":"ACW2927","name":"AHTISHAM AMJAD JAVED"},{"uid":"OABJ0","id":"ACW2952","name":"ABINASH MAHATO"},{"uid":"OA462","id":"ACW2983","name":"JAMES KOECH"},{"uid":"OAI62","id":"ACW3026","name":"RAMAKRISHNA LAXMAN PARSA"},{"uid":"OARIO","id":"ACW3086","name":"OBADIAH MARUS"},{"uid":"OAC37","id":"ACW3094","name":"SIMION OBAIGWA"},{"uid":"OAFPE","id":"ACW3108","name":"AASHIK MANSUR"},{"uid":"OASBH","id":"ACW3109","name":"HARI DAS"},{"uid":"OALAU","id":"ACW3113","name":"NISHAN PARIYAR"},{"uid":"OAYB9","id":"ACW3115","name":"AJAY DAS"},{"uid":"OAWW4","id":"ACW3118","name":"SHIV DAS"},{"uid":"OAJFO","id":"ACW3129","name":"WESLEY KIPLAGAT"},{"uid":"OA9D6","id":"ACW3150","name":"MD TAPADAR"},{"uid":"OAIK1","id":"ACW3172","name":"ZUBER KHAN"},{"uid":"OA7PP","id":"ACW3173","name":"MEHRAJ MOHD"},{"uid":"OA6OL","id":"ACW3174","name":"AKHEEL SHAIK"},{"uid":"OAF67","id":"ACW3178","name":"JOSEPH KIMATHI"},{"uid":"OAECQ","id":"ACW3179","name":"MUHAMMAD MUHAMMAD KARIM"},{"uid":"OAC8T","id":"ACW3180","name":"MUHAMMAD MUHAMMAD TARIQ"},{"uid":"OA7P6","id":"ACW3183","name":"SAYANNA SUDDALA"},{"uid":"OAMKF","id":"ACW3184","name":"AHMAD JAMAL"},{"uid":"OAJ9X","id":"ACW3185","name":"RAVI PESARI"},{"uid":"OA98F","id":"ACW3190","name":"ARUN RAO"},{"uid":"OAAQS","id":"ACW3193","name":"SHIVA CHUKKA"},{"uid":"OAZW5","id":"ACW3196","name":"AJAY VANGALA SUDHAKAR"},{"uid":"OAQNT","id":"ACW3198","name":"SAJJAD ZIARAT KHAN"},{"uid":"OA22M","id":"ACW3199","name":"USAMA MINHAJ UDDIN"},{"uid":"OA1HK","id":"ACW3201","name":"MAQSOOD MUHAMMAD"},{"uid":"OAB4J","id":"ACW3204","name":"RAM RAY"},{"uid":"OAHYQ","id":"ACW3205","name":"BHARAT THAKUR"},{"uid":"OADHR","id":"ACW3206","name":"RAHAMAT ALI"},{"uid":"OALNU","id":"ACW3207","name":"DURGA CHAPAGAI"},{"uid":"OAENM","id":"ACW3208","name":"SHOAIB KHAN"},{"uid":"OA6KF","id":"ACW3209","name":"BRIAN KITHURE"},{"uid":"OAYVR","id":"ACW3210","name":"BRIAN MWANGI MUREITHI"},{"uid":"OAFRH","id":"ACW3213","name":"MOSES MUKASA"},{"uid":"OA39D","id":"ACW3215","name":"DENNIS MURIUKI"},{"uid":"OAOYY","id":"ACW3217","name":"TONNY KEREDA"},{"uid":"OAH10","id":"ACW3219","name":"JOSEPH MUTONGA"},{"uid":"OAWFU","id":"ACW3220","name":"KAMALA DAHAL"},{"uid":"OA0M5","id":"ACW3221","name":"DHAN KARKI"},{"uid":"OAAAQ","id":"ACW3222","name":"HASTA RAI"},{"uid":"OAG9W","id":"ACW3223","name":"LAXMI KHADKA"},{"uid":"OAASA","id":"ACW3224","name":"RENUKA TOLANGI"},{"uid":"OAW00","id":"ACW3225","name":"RIMA HALAWAI"},{"uid":"OAT5M","id":"ACW3227","name":"DHANMAYA BISTA"},{"uid":"OANPN","id":"ACW3228","name":"GEETA SUNUWAR"},{"uid":"OA96D","id":"ACW3229","name":"HIRAMAYA KARKI"},{"uid":"OADXV","id":"ACW3230","name":"MAMATA TAMANG"},{"uid":"OA4NF","id":"ACW3231","name":"PRATIMA RAI"},{"uid":"OAV5U","id":"ACW3232","name":"RATNAKALA DAHAL"},{"uid":"OA5AL","id":"ACW3233","name":"SANJITA MECHE"},{"uid":"OAQUK","id":"ACW3235","name":"SARMILA YONGYA"},{"uid":"OAQ9Q","id":"ACW3239","name":"DAWOOD JAVAID MASIH"},{"uid":"OAYL6","id":"ACW3240","name":"HASSAN MUHAMMAD JAMIL AKHTAR"},{"uid":"OA9K2","id":"ACW3241","name":"ASAD SAFDAR ALI"},{"uid":"OA4ER","id":"ACW3242","name":"JAVED DILAWAR KHAN"},{"uid":"OAMH3","id":"ACW3244","name":"ALICE OIRERE"},{"uid":"OAAJL","id":"ACW3245","name":"BETH GICHANGI"},{"uid":"OAN66","id":"ACW3246","name":"CAROLYNE JEPKOECH"},{"uid":"OA3I4","id":"ACW3247","name":"CHRISTINE KWANGA"},{"uid":"OAQ9F","id":"ACW3248","name":"CYNTHIA NGACHI"},{"uid":"OA0I7","id":"ACW3250","name":"DORCA ORENGE"},{"uid":"OAC9C","id":"ACW3252","name":"ESTHER KIMANI"},{"uid":"OACUU","id":"ACW3253","name":"EUNICE MISE"},{"uid":"OAW5N","id":"ACW3255","name":"EVALINE KAMAU"},{"uid":"OAQ0Z","id":"ACW3256","name":"FAITH CHEROP"},{"uid":"OAS4J","id":"ACW3257","name":"FLORENCE CHEPKURUI"},{"uid":"OAJ5A","id":"ACW3259","name":"GLADYS MUTURI"},{"uid":"OAV3X","id":"ACW3260","name":"GLORIA RUTO"},{"uid":"OATFO","id":"ACW3262","name":"JACKLINE JERONO"},{"uid":"OA046","id":"ACW3264","name":"JACKLINE WAITHERERO"},{"uid":"OAUSJ","id":"ACW3265","name":"JOAN SEUREI"},{"uid":"OABWK","id":"ACW3267","name":"LONAH ONGAKI"},{"uid":"OA3UZ","id":"ACW3268","name":"MARION JEROTICH"},{"uid":"OAZ0N","id":"ACW3269","name":"MARY REBECCA"},{"uid":"OAWP4","id":"ACW3273","name":"NAOMY CHEPKOSGEI"},{"uid":"OADJ2","id":"ACW3274","name":"NAUM JEPLETING"},{"uid":"OAKZJ","id":"ACW3275","name":"NENO BARMASAI"},{"uid":"OA2AL","id":"ACW3276","name":"NESTA MUCHIRA"},{"uid":"OA0GO","id":"ACW3277","name":"OLIVIA CHEMEITOI"},{"uid":"OAJKX","id":"ACW3278","name":"RAHAB WANGESHI"},{"uid":"OA4FY","id":"ACW3279","name":"ROSEMARY NJUGUNA"},{"uid":"OA1DA","id":"ACW3280","name":"RUTH ONKWARE"},{"uid":"OAAIE","id":"ACW3283","name":"SCOLASTICA MWANGI"},{"uid":"OA0BY","id":"ACW3284","name":"STELLAH CHERUBET"},{"uid":"OABK5","id":"ACW3285","name":"STELLAH CHEPCHIRCHIR"},{"uid":"OAXYK","id":"ACW3286","name":"SUSAN CHEROP"},{"uid":"OAPA8","id":"ACW3287","name":"SILVIAH OKEMWA"},{"uid":"OA446","id":"ACW3288","name":"TABITHA JEROTICH"},{"uid":"OA0A6","id":"ACW3289","name":"TRUPHENA MOCHECHE"},{"uid":"OAH1M","id":"ACW3290","name":"VALENTINE JELIMO"},{"uid":"OAILM","id":"ACW3291","name":"VIOLET MUTUNGA"},{"uid":"OAMW7","id":"ACW3293","name":"MANIKA MECHI"},{"uid":"OAZA4","id":"ACW3294","name":"NIRMALA SIGDEL"},{"uid":"OA1N4","id":"ACW3295","name":"BISHNU TAMANG"},{"uid":"OA8JM","id":"ACW3296","name":"MAN TAMANG"},{"uid":"OA3X0","id":"ACW3297","name":"GAYATRI TAMANG"},{"uid":"OAGSG","id":"ACW3298","name":"DISMAS NTUBRI"},{"uid":"OA21B","id":"ACW3299","name":"RODGERS TOO"},{"uid":"OACZ4","id":"ACW3300","name":"SAMUEL KAMAU"},{"uid":"OAX8W","id":"ACW3301","name":"ALLAN SAWE"},{"uid":"OAJB2","id":"ACW3302","name":"VINCENT KIPNGENO"},{"uid":"OAL8X","id":"ACW3303","name":"FREDRICK SHIKUVALE"},{"uid":"OADDN","id":"ACW3304","name":"SIMON MUIRURI"},{"uid":"OAQVO","id":"ACW3305","name":"ELVIS KEEN"},{"uid":"OABLJ","id":"ACW3306","name":"ROBERT MUCHIRI"},{"uid":"OAFBL","id":"ACW3307","name":"DENIS KIMURGOR"},{"uid":"OAYJA","id":"ACW3308","name":"DANSTAN MADANGU"},{"uid":"OAYJJ","id":"ACW3309","name":"PRAISE SHABANJI"},{"uid":"OA7F4","id":"ACW3310","name":"ZACHARY MARISA"},{"uid":"OAO34","id":"ACW3311","name":"ALLAN KIPTOO"},{"uid":"OANWC","id":"ACW3312","name":"EVANS PHILIP"},{"uid":"OAL2W","id":"ACW3313","name":"AUSTINE MUTHONI"},{"uid":"OA7N9","id":"ACW3314","name":"ROY MAKATA"},{"uid":"OAY9W","id":"ACW3315","name":"KEVIN OMBATI"},{"uid":"OA8LH","id":"ACW3316","name":"ROBERT KIMANI"},{"uid":"OALJ9","id":"ACW3317","name":"SIDNEY OKWARO"},{"uid":"OADC9","id":"ACW3318","name":"JOEL NYAMBISA"},{"uid":"OA61A","id":"ACW3319","name":"SAMUEL MUCHAI"},{"uid":"OA5US","id":"ACW3320","name":"ABRAHAM KIPCHIRCHIR"},{"uid":"OALKO","id":"ACW3321","name":"JAVIC AYORA"},{"uid":"OAQQ0","id":"ACW3322","name":"DENNIS KIPKOSGEI"},{"uid":"OA9LA","id":"ACW3323","name":"ANTHONY WANJIRU"},{"uid":"OA5HD","id":"ACW3324","name":"MOSES KIPTOO"},{"uid":"OA7WX","id":"ACW3325","name":"DENNIS KASIDI"},{"uid":"OAC84","id":"ACW3326","name":"CORNELIUS KIPSANG"},{"uid":"OA9IZ","id":"ACW3327","name":"CORNELIUS KIPCHUMBA"},{"uid":"OA07J","id":"ACW3328","name":"DERICK KIPTUM"},{"uid":"OAFGN","id":"ACW3329","name":"MILTON TUM"},{"uid":"OAUBZ","id":"ACW3330","name":"ELI KIPTOO"},{"uid":"OAUDJ","id":"ACW3331","name":"DENIS KIPROP"},{"uid":"OAE4F","id":"ACW3333","name":"JULIUS WAMANJI"},{"uid":"OA8UJ","id":"ACW3334","name":"DENNIS OSIKEI"},{"uid":"OADUZ","id":"ACW3335","name":"DAVIES KIPKOECH"},{"uid":"OAGSR","id":"ACW3336","name":"BOAZ OCHIENG"},{"uid":"OAVX1","id":"ACW3337","name":"EMMANUEL ZULUNY"},{"uid":"OAHV5","id":"ACW3339","name":"EMMANUEL ROTICH"},{"uid":"OADVR","id":"ACW3341","name":"RODGERS KIPKIRUI"},{"uid":"OAY1N","id":"ACW3342","name":"ADNAS KIPROTICH"},{"uid":"OA60H","id":"ACW3343","name":"NOVESTERS SOME"},{"uid":"OA4NZ","id":"ACW3344","name":"BRANDON MUTHUI"},{"uid":"OAO0W","id":"ACW3345","name":"CHARLES TINDIRA"},{"uid":"OA1SG","id":"ACW3347","name":"KAAN SANG"},{"uid":"OAPRY","id":"ACW3348","name":"GEOFFREY KANJA"},{"uid":"OAIZ3","id":"ACW3350","name":"MARTIN MWANGI"},{"uid":"OAC63","id":"ACW3351","name":"AMOS KIPROP"},{"uid":"OAUUK","id":"ACW3352","name":"ALVINE WANGU"},{"uid":"OAZHL","id":"ACW3353","name":"CYRUS OMBOGO"},{"uid":"OAU32","id":"ACW3354","name":"JOHN MACHARIA"},{"uid":"OA66W","id":"ACW3355","name":"KEVIN OUMA"},{"uid":"OAM7L","id":"ACW3356","name":"MILTON KIMUTAI"},{"uid":"OAXHN","id":"ACW3357","name":"MUHAMMAD MUHAMMAD AKRAM"},{"uid":"OA5IR","id":"ACW3358","name":"HUZAIFA ALI MUHAMMAD TOUQEER"},{"uid":"OATAC","id":"ACW3360","name":"ASTLE AMJAD MASIH"},{"uid":"OA5OU","id":"ACW3364","name":"MUHAMMAD QAMAR ZAMAN"},{"uid":"OAV27","id":"ACW3365","name":"KAMRAN KARAMAT HUSSAIN MIRZA"},{"uid":"OARIE","id":"ACW3368","name":"IMRAN SHAUKAT"},{"uid":"OAEPI","id":"ACW3369","name":"MUHAMMAD ABDUL KHALIQ"},{"uid":"OAQR6","id":"ACW3370","name":"WAHAB ZAMAN RAJANADEEM MASOOD"},{"uid":"OAVU1","id":"ACW3371","name":"HUSNAIN GHULAM ahmed"},{"uid":"OAJUO","id":"ACW3372","name":"ABDUL RAFAY GHULAM SABIR MIRZA"},{"uid":"OAIP7","id":"ACW3373","name":"ADIL RAHMAN"},{"uid":"OA3QG","id":"ACW3374","name":"ATIF MUHAMMAD nishat"},{"uid":"OAFC0","id":"ACW3376","name":"MUHAMMAD BASHARAT"},{"uid":"OAUZD","id":"ACW3377","name":"ZIYAD HUSSAIN"},{"uid":"OA332","id":"ACW3378","name":"DANIAL ALI MUHAMMAD ILYAS"},{"uid":"OA5C0","id":"ACW3379","name":"IMRAN MASAL khan"},{"uid":"OAQ14","id":"ACW3380","name":"ASHOK YADAV"},{"uid":"OAU5T","id":"ACW3381","name":"YAM BHUJEL"},{"uid":"OAUKJ","id":"ACW3382","name":"IMRAN KHAN"},{"uid":"OA0FL","id":"ACW3383","name":"NABEEL MUHAMMAD FARID KHAN"},{"uid":"OASQH","id":"ACW3384","name":"MUHAMMAD IRSHAD"},{"uid":"OALT8","id":"ACW3386","name":"MUHAMMAD AHSAN UL HAQ"},{"uid":"OAU95","id":"ACW3387","name":"TILAWAT SHAH"},{"uid":"OAFS9","id":"ACW3389","name":"FAISAL AHMED"},{"uid":"OAYWG","id":"ACW3390","name":"FAISAL RAYSAT"},{"uid":"OAAZL","id":"ACW3391","name":"HAMAYUN BAKHTIAR ALI"},{"uid":"OAWTV","id":"ACW3392","name":"HARIS MIR"},{"uid":"OAMA9","id":"ACW3393","name":"SAQIB MASIH"},{"uid":"OAYBR","id":"ACW3394","name":"TAUSEEQ HAIDAR"},{"uid":"OA6RV","id":"ACW3396","name":"FALAK ZAIB"},{"uid":"OAL9V","id":"ACW3399","name":"MAMREZ KHAN"},{"uid":"OAX21","id":"ACW3400","name":"MALIK KHAN"},{"uid":"OA7J6","id":"ACW3401","name":"MUHAMMAD FAZAL IHSAN"},{"uid":"OAMO9","id":"ACW3403","name":"MIAN ULLAH KHAN"},{"uid":"OAW2T","id":"ACW3404","name":"UQAB AHMAD KHAIR MUHAMMAD"},{"uid":"OAG1X","id":"ACW3405","name":"REHMAN ULLAH GULFAM KHAN"},{"uid":"OAAFH","id":"ACW3406","name":"AMIR ALI ZAFAR ALI KHAN"},{"uid":"OAZO7","id":"ACW3408","name":"MUHAMMAD SAID RAHMAN"},{"uid":"OALAL","id":"ACW3409","name":"MUHAMMAD KAMRAN MUHAMMAD"},{"uid":"OAMHS","id":"ACW3411","name":"MUHAMMAD SHAMSHAD KHAN"},{"uid":"OAX5M","id":"ACW3412","name":"MUHAMMAD YOUSAF QADRAT ULLAH"},{"uid":"OA4L4","id":"ACW3414","name":"JAWAD KHAN"},{"uid":"OAD7G","id":"ACW3415","name":"KHALIL HABIB ULLAH"},{"uid":"OAGOR","id":"ACW3416","name":"ZULFAN KHAN"},{"uid":"OASZ9","id":"ACW3418","name":"UZAIR KHAN"},{"uid":"OAV77","id":"ACW3419","name":"AFTAB IQBAL"},{"uid":"OA0MX","id":"ACW3420","name":"ABDULLAH KHAN"},{"uid":"OA82M","id":"ACW3421","name":"ATEEQ FAYAZ MUHAMMAD"},{"uid":"OA0P7","id":"ACW3422","name":"JAN ALAM"},{"uid":"OA7Z9","id":"ACW3423","name":"MAAZ ALI"},{"uid":"OAWNB","id":"ACW3424","name":"AMIR KHAN"},{"uid":"OASPM","id":"ACW3425","name":"KHAIR ULLAH"},{"uid":"OADU7","id":"ACW3427","name":"MUHAMMAD ZEESHAN"},{"uid":"OAXNO","id":"ACW3428","name":"MUHAMMAD SHAHAB"},{"uid":"OARYD","id":"ACW3430","name":"ATIF KHAN"},{"uid":"OAEF3","id":"ACW3431","name":"MUHAMMAD ADNAN"},{"uid":"OANN0","id":"ACW3432","name":"SHAYAN KHAN"},{"uid":"OAVB6","id":"ACW3435","name":"ASIF KHAN MUNIR KHAN"},{"uid":"OADAM","id":"ACW3437","name":"SHAD NOOR MUHAMMAD"},{"uid":"OAKAL","id":"ACW3438","name":"ZAKA ULLAH"},{"uid":"OAEUJ","id":"ACW3440","name":"AKHTAR ALI SAID WALI SHAH"},{"uid":"OALH7","id":"ACW3441","name":"ZABIH SAID RAHIM"},{"uid":"OA0WI","id":"ACW3443","name":"MUHAMMAD GHULAM SARWAR"},{"uid":"OAZ2G","id":"ACW3444","name":"MUHAMMAD PASAND KHAN"},{"uid":"OA4SB","id":"ACW3445","name":"SADAQAT KHAN"},{"uid":"OA5PD","id":"ACW3446","name":"MUHAMMAD SAQIB"},{"uid":"OAOHA","id":"ACW3448","name":"MUHAMMAD HASNAIN"},{"uid":"OAOHG","id":"ACW3450","name":"HAMEED ULLAH"},{"uid":"OASJQ","id":"ACW3451","name":"MUHAMMAD GHANI"},{"uid":"OAQYR","id":"ACW3452","name":"ISSA UMAIR"},{"uid":"OAFZ6","id":"ACW3453","name":"AKASH MASIH"},{"uid":"OAHC5","id":"ACW3454","name":"GHULAM GHULAM ABBAS"},{"uid":"OAIW1","id":"ACW3455","name":"RIASAT KHAN"},{"uid":"OA8HX","id":"ACW3456","name":"MUDASSAR MUHAMMAD SIDDIQUE"},{"uid":"OAFYC","id":"ACW3457","name":"AAMIR SOHAIL"},{"uid":"OACHE","id":"ACW3458","name":"FARMAN ALI"},{"uid":"OAT3P","id":"ACW3459","name":"MUHAMMAD AMIR"},{"uid":"OA654","id":"ACW3460","name":"MUHAMMAD AMIR"},{"uid":"OAQFY","id":"ACW3461","name":"MUHAMMAD BILAL"},{"uid":"OARNT","id":"ACW3462","name":"MUHAMMAD RAMZAN"},{"uid":"OA1YP","id":"ACW3464","name":"MUHAMMAD MUHAMMAD SARWAR"},{"uid":"OAKIO","id":"ACW3465","name":"MUHAMMAD ZAMAN"},{"uid":"OA12J","id":"ACW3466","name":"MUHAMMAD ZOHAIB"},{"uid":"OAMXY","id":"ACW3467","name":"NABI AHMAD"},{"uid":"OA2V8","id":"ACW3468","name":"NAZAR ALLAH DITTA"},{"uid":"OA95R","id":"ACW3471","name":"SARAN GHULAM AKHTAR"},{"uid":"OAKV9","id":"ACW3473","name":"ZAMAN HAIDER"},{"uid":"OAKUA","id":"ACW3475","name":"AHMAD BILAL GULZAR AHMAD"},{"uid":"OAP6B","id":"ACW3476","name":"JAMSHAD ZEB"},{"uid":"OA1S3","id":"ACW3477","name":"ZIA AHMED"},{"uid":"OA69M","id":"ACW3478","name":"MUHAMMAD MUHAMMAD RAMZAN"},{"uid":"OABJH","id":"ACW3479","name":"MURAD ALI"},{"uid":"OAFEK","id":"ACW3480","name":"QASIM SHAHBAZ ALI"},{"uid":"OAS60","id":"ACW3481","name":"MUHAMMAD IQBAL"},{"uid":"OA9DD","id":"ACW3482","name":"SAIBABA SANTHOSH"},{"uid":"OAQCV","id":"ACW3484","name":"SANTHOSH NENAVATH"},{"uid":"OAKQU","id":"ACW3485","name":"RAJESH PAVAR"},{"uid":"OAOE2","id":"ACW3486","name":"JANPATH MALOTH"},{"uid":"OAKN8","id":"ACW3487","name":"NITHIN KUMAR SAMPANGI"},{"uid":"OAYGW","id":"ACW3489","name":"SUNIL BAVANNA VALGOT"},{"uid":"OAPLX","id":"ACW3490","name":"SRIKANTH KURAKULA"},{"uid":"OA8NA","id":"ACW3492","name":"RAJENDER KALLEM"},{"uid":"OAUL1","id":"ACW3493","name":"SUMAN SAYANNA"},{"uid":"OAR62","id":"ACW3494","name":"SUNIL MARLA"},{"uid":"OAF40","id":"ACW3495","name":"SUMITH GADDAM"},{"uid":"OAWCF","id":"ACW3496","name":"RAMESH SATHAIAH KOPDURI"},{"uid":"OACJ1","id":"ACW3497","name":"KARTHEEK JANGITI"},{"uid":"OA9CO","id":"ACW3498","name":"RAJENDAR YELLAIAH DEVALA"},{"uid":"OAB63","id":"ACW3499","name":"KAREEM MOULANA SAYED"},{"uid":"OAV1J","id":"ACW3500","name":"RAKESH KUNCHEPU"},{"uid":"OA6TZ","id":"ACW3501","name":"BALIKA NEPALI"},{"uid":"OAZAG","id":"ACW3502","name":"INDIRA B B"},{"uid":"OAPPR","id":"ACW3503","name":"LAXMI PARIYAR"},{"uid":"OAXH8","id":"ACW3504","name":"MANISHA LIMBU"},{"uid":"OA9G4","id":"ACW3505","name":"NIRMALI SARBARIYA"},{"uid":"OA6PO","id":"ACW3506","name":"RANJANA BHANDARI"},{"uid":"OAT8D","id":"ACW3507","name":"SABINA DARJI"},{"uid":"OA603","id":"ACW3508","name":"SANGITA BARAL"},{"uid":"OANKB","id":"ACW3509","name":"SANGITA SHERCHAN"},{"uid":"OABEG","id":"ACW3510","name":"SUNITA BESRA"},{"uid":"OAQ2F","id":"ACW3511","name":"YASODA DAHAL"},{"uid":"OAQOQ","id":"ACW3512","name":"KAMALA KHATIWADA"},{"uid":"OA2J8","id":"ACW3513","name":"SUSMA SERMA"},{"uid":"OA3SQ","id":"ACW3514","name":"TENGSANG GHISING"},{"uid":"OAHPZ","id":"ACW3515","name":"SHANTA GURUNG"},{"uid":"OA7SP","id":"ACW3516","name":"ANILKUMAR GADDALA"},{"uid":"OAS55","id":"ACW3517","name":"DINESH MUNJAMPALLY"},{"uid":"OAL1Q","id":"ACW3518","name":"DEVENDHAR AKULA"},{"uid":"OA2AC","id":"ACW3520","name":"PRAVEEN GANGANNA"},{"uid":"OAF0Y","id":"ACW3521","name":"GANGADHAR LAMBANI"},{"uid":"OAIET","id":"ACW3526","name":"ABIJAH NGOTHO"},{"uid":"OAEMQ","id":"ACW3528","name":"ANN KARIMI"},{"uid":"OAOTS","id":"ACW3529","name":"ANNE ODUNGA"},{"uid":"OA0NL","id":"ACW3530","name":"BROOK NASIEKU"},{"uid":"OA998","id":"ACW3531","name":"CAROLINE WANGECHI"},{"uid":"OA85U","id":"ACW3532","name":"CAROLINE CHEGE"},{"uid":"OA1WT","id":"ACW3533","name":"CATHERINE MWANGI"},{"uid":"OAQ60","id":"ACW3534","name":"CHERLY MWAURA"},{"uid":"OA8YE","id":"ACW3536","name":"ELECTINE NALIAKA OJIAMBO"},{"uid":"OAQ8X","id":"ACW3537","name":"ELIZABETH AREYO"},{"uid":"OA3ZQ","id":"ACW3539","name":"ELIZABETH CHEGE"},{"uid":"OAQ91","id":"ACW3540","name":"EUNICE MOMANYI"},{"uid":"OAN81","id":"ACW3541","name":"EUNICE MONGARE"},{"uid":"OA6BF","id":"ACW3542","name":"FAITH JEPKOECH"},{"uid":"OAABG","id":"ACW3543","name":"FAITH KABATI"},{"uid":"OA1E2","id":"ACW3544","name":"FRIDAH KIPTOO"},{"uid":"OARPS","id":"ACW3545","name":"FRIDAH NJOKI"},{"uid":"OA1BU","id":"ACW3547","name":"HANNAH NDUTA"},{"uid":"OANLQ","id":"ACW3548","name":"JACKLINE GITHAKA"},{"uid":"OAYH3","id":"ACW3549","name":"JOSEPHINE NDUNGU"},{"uid":"OAR65","id":"ACW3550","name":"JOSYLINE JEPTOO"},{"uid":"OA282","id":"ACW3551","name":"JUDITH SINGOEY"},{"uid":"OAZ3B","id":"ACW3552","name":"JUDY MUMBI"},{"uid":"OAJWK","id":"ACW3553","name":"LENA JEMELI"},{"uid":"OA03N","id":"ACW3554","name":"LINET OCHANGO"},{"uid":"OAZVT","id":"ACW3555","name":"MARION WANDERI"},{"uid":"OAW4N","id":"ACW3556","name":"MARY MUENI KYALO"},{"uid":"OAQYT","id":"ACW3557","name":"MARY NJUGUNA"},{"uid":"OAIRY","id":"ACW3558","name":"MARY NGURURI"},{"uid":"OAZAB","id":"ACW3559","name":"MERCY MUREI"},{"uid":"OA1UI","id":"ACW3560","name":"MERCY NAVAKA"},{"uid":"OA81W","id":"ACW3561","name":"MERCY NJOROGE"},{"uid":"OA7OU","id":"ACW3562","name":"MIRIAM CHERONO"},{"uid":"OA6EM","id":"ACW3563","name":"MIRIAM THIGE"},{"uid":"OAQFL","id":"ACW3564","name":"MOUREEN MOREKA"},{"uid":"OA5SV","id":"ACW3565","name":"NANCY OBONGO"},{"uid":"OA5VB","id":"ACW3566","name":"NAOM MONGARE"},{"uid":"OAHA5","id":"ACW3567","name":"NDUKU MWANZAU"},{"uid":"OAMFL","id":"ACW3568","name":"POLLY WAMBUI NJERI"},{"uid":"OA5UM","id":"ACW3569","name":"RUTH OGEGA"},{"uid":"OA2L9","id":"ACW3570","name":"SARAH NJERI"},{"uid":"OAUYW","id":"ACW3571","name":"SHARON OUGA"},{"uid":"OA3V4","id":"ACW3572","name":"SHARON RUTTO"},{"uid":"OA6XS","id":"ACW3573","name":"SHEILA NGOME"},{"uid":"OAGFM","id":"ACW3575","name":"YVONNE MUTUNE"},{"uid":"OA5RY","id":"ACW3577","name":"AHMED NASIR"},{"uid":"OATPH","id":"ACW3578","name":"SUSAN NEUPANE"},{"uid":"OASH1","id":"ACW3579","name":"ANIL DARJEE"},{"uid":"OA021","id":"ACW3580","name":"MANOJ MISHRA"},{"uid":"OAJQV","id":"ACW3581","name":"NISHAN BISHWAKARMA"},{"uid":"OA0MB","id":"ACW3583","name":"ASLAM RAIN"},{"uid":"OA0V3","id":"ACW3584","name":"ALIHAZARAT RAIN"},{"uid":"OAFZM","id":"ACW3585","name":"ANSAR ANSARI"},{"uid":"OAMZI","id":"ACW3586","name":"AJAY SHARMA"},{"uid":"OAUB1","id":"ACW3587","name":"AJAYKUMAR TAJPURIYA"},{"uid":"OAB3N","id":"ACW3588","name":"AMIN SHEKH"},{"uid":"OAEXX","id":"ACW3589","name":"ARUN RAJBANSHI"},{"uid":"OAZJD","id":"ACW3590","name":"AJAY KAPAR"},{"uid":"OAZXW","id":"ACW3591","name":"ARBIND KUMAR"},{"uid":"OA4NL","id":"ACW3592","name":"SABU BHUJEL"},{"uid":"OAJOY","id":"ACW3593","name":"RABINA DAMAI"},{"uid":"OAJV7","id":"ACW3594","name":"AMRITA PARIYAR"},{"uid":"OALUO","id":"ACW3595","name":"ANITA MAJHI"},{"uid":"OAEKV","id":"ACW3596","name":"ANJANA DARJI"},{"uid":"OALJB","id":"ACW3597","name":"ALISHA TAMANG"},{"uid":"OAY2V","id":"ACW3598","name":"AAISMA RAI"},{"uid":"OATV4","id":"ACW3599","name":"AMRITA DARJI"},{"uid":"OAZCW","id":"ACW3600","name":"AZAN ZAHEER"},{"uid":"OAIVP","id":"ACW3602","name":"RAJA ALI"},{"uid":"OAGXT","id":"ACW3603","name":"ARMAN ALI"},{"uid":"OAQKP","id":"ACW3604","name":"MOHSEN AZIZ"},{"uid":"OA04Q","id":"ACW3606","name":"AIZAZ KHAN"},{"uid":"OASPY","id":"ACW3607","name":"DANISH ABBASI MUHAMMAD ARZAN"},{"uid":"OATTK","id":"ACW3608","name":"INTIKHAB KHAN"},{"uid":"OA5JV","id":"ACW3609","name":"MUHAMMAD TALIB HUSSAIN"},{"uid":"OADH0","id":"ACW3610","name":"HUZAIFA KHAN"},{"uid":"OAJMN","id":"ACW3613","name":"TOUHEED AHMAD"},{"uid":"OA8SM","id":"ACW3614","name":"SAID ABUBAKAR"},{"uid":"OAZF8","id":"ACW3615","name":"AFSAR BACHA"},{"uid":"OA9P9","id":"ACW3616","name":"MUHAMMAD AWAIS"},{"uid":"OAJY6","id":"ACW3617","name":"SHAHZAD MASIH"},{"uid":"OABTE","id":"ACW3618","name":"HASNAIN RAZA"},{"uid":"OAO1M","id":"ACW3619","name":"NAEEM NOOR ZAMIN"},{"uid":"OABJ9","id":"ACW3620","name":"HUSNAL WAHAB"},{"uid":"OAGR2","id":"ACW3621","name":"IBAD SHAMSHER"},{"uid":"OALZJ","id":"ACW3624","name":"ISMAIL SHAHID"},{"uid":"OAS6P","id":"ACW3625","name":"ISMAIL KARIM"},{"uid":"OA08X","id":"ACW3626","name":"SHUBHASH SAH"},{"uid":"OA9ZY","id":"ACW3627","name":"SULIN SAH"},{"uid":"OAGKF","id":"ACW3628","name":"SHIVAM MAHATO"},{"uid":"OAZBZ","id":"ACW3629","name":"SHYAM SAHANI"},{"uid":"OAUQC","id":"ACW3630","name":"SUMAN SAH"},{"uid":"OA2HI","id":"ACW3631","name":"SOMIT YADAV"},{"uid":"OAAJ5","id":"ACW3632","name":"SHESH THAKUR"},{"uid":"OAPFO","id":"ACW3633","name":"UMESH ADHIIKARI"},{"uid":"OAG9G","id":"ACW3637","name":"SHRAWAN MAHARA"},{"uid":"OAAQN","id":"ACW3638","name":"SUEV NADAPH"},{"uid":"OAX35","id":"ACW3639","name":"SUBODHA MANDAL"},{"uid":"OAKDG","id":"ACW3640","name":"SRIJANA ANGDEMBE"},{"uid":"OAC5W","id":"ACW3641","name":"SIRJANA GHORSAI"},{"uid":"OAUH8","id":"ACW3642","name":"SUKARMANI HEMRAM"},{"uid":"OAF4M","id":"ACW3643","name":"UJJALTA BALAYKOTI"},{"uid":"OAK38","id":"ACW3644","name":"SIRJANA PHAGO"},{"uid":"OA0ZE","id":"ACW3645","name":"SUSMITA KADARIYA"},{"uid":"OAS77","id":"ACW3648","name":"UNISHA DARJI"},{"uid":"OAT93","id":"ACW3649","name":"SONI RAI"},{"uid":"OAEI5","id":"ACW3650","name":"ANIL DEGAVATH"},{"uid":"OAJL7","id":"ACW3651","name":"NAVEEN BANAVATH"},{"uid":"OA6Y6","id":"ACW3652","name":"SHANKAR ELLAPPA KONDALWADI"},{"uid":"OA08H","id":"ACW3653","name":"SAIKIRAN NAGAM"},{"uid":"OADRQ","id":"ACW3658","name":"SAI PODILA"},{"uid":"OA7EB","id":"ACW3660","name":"RAM KUMAR DAS"},{"uid":"OAT57","id":"ACW3661","name":"RAJNISH KAPAR"},{"uid":"OAAN6","id":"ACW3662","name":"RAM KAMAIT"},{"uid":"OAKUS","id":"ACW3664","name":"ROSHAN RAUT"},{"uid":"OAQ66","id":"ACW3665","name":"RAKESH PASWAN"},{"uid":"OAHBO","id":"ACW3666","name":"RAM BHANDARI"},{"uid":"OAK5X","id":"ACW3667","name":"RAJIV KAPAR"},{"uid":"OA6KK","id":"ACW3668","name":"RAMESH MUKHIYA"},{"uid":"OAWL3","id":"ACW3669","name":"RAJESH SAH"},{"uid":"OAMT9","id":"ACW3670","name":"RAVI MALIK"},{"uid":"OAQI3","id":"ACW3672","name":"RUPESH YADAV"},{"uid":"OAUOT","id":"ACW3673","name":"RAMCHANDRA YADAV"},{"uid":"OAGA5","id":"ACW3674","name":"RUBEN LIMBU"},{"uid":"OADUS","id":"ACW3675","name":"RAJ MAGAR"},{"uid":"OAH51","id":"ACW3676","name":"RAJ SAH"},{"uid":"OASEU","id":"ACW3677","name":"RAM MANDAL"},{"uid":"OAD2B","id":"ACW3678","name":"RAJ KAMAIT"},{"uid":"OA0K5","id":"ACW3679","name":"ROSHAN PANDE"},{"uid":"OACQX","id":"ACW3680","name":"RAKESH GIRI"},{"uid":"OARKT","id":"ACW3681","name":"RITA MATE"},{"uid":"OA5DF","id":"ACW3682","name":"RITA BOHORA"},{"uid":"OAZ1K","id":"ACW3683","name":"ROSANI DHAKAL"},{"uid":"OASVY","id":"ACW3684","name":"RUPA GHIMIRE"},{"uid":"OAF93","id":"ACW3685","name":"MALIK SAJID MALIK MEHMOOD"},{"uid":"OAS80","id":"ACW3686","name":"BAHAR MUHAMMAD HASSAN"},{"uid":"OA75D","id":"ACW3687","name":"HAMZA ARSLAN"},{"uid":"OAXFY","id":"ACW3688","name":"MALIK FAZAL UR REHMAN"},{"uid":"OA6TD","id":"ACW3690","name":"SABIR ALI"},{"uid":"OAY48","id":"ACW3691","name":"MALIK KHAN"},{"uid":"OA98D","id":"ACW3692","name":"RAJ WALI"},{"uid":"OA16B","id":"ACW3693","name":"SHAH ZAIB"},{"uid":"OAEUN","id":"ACW3694","name":"KUMAIL RIAZ KHAN"},{"uid":"OA2VO","id":"ACW3695","name":"ABDAL ULLAH"},{"uid":"OAYBM","id":"ACW3697","name":"USAMA ZAHOOR AHMAD"},{"uid":"OA31X","id":"ACW3698","name":"MUHAMMAD NAEEM"},{"uid":"OAP6H","id":"ACW3699","name":"RIZWAN ULLAH"},{"uid":"OA3FZ","id":"ACW3700","name":"MUHAMMAD SHABAN"},{"uid":"OAW7O","id":"ACW3701","name":"DANISH AASI QURBAN JANJUA"},{"uid":"OA09N","id":"ACW3702","name":"ABBAS BISMILLAH SHAH"},{"uid":"OACHX","id":"ACW3704","name":"ABID HUSSAIN"},{"uid":"OA5IX","id":"ACW3705","name":"WAQAS MUHAMMED ZAFAR IQBAL"},{"uid":"OAJBT","id":"ACW3706","name":"CHINNA ANNARAM"},{"uid":"OAQ7S","id":"ACW3707","name":"PRASHANTH GANGARAM ELLOLLA"},{"uid":"OA0VK","id":"ACW3708","name":"SHAIK SHAIK MOULANA"},{"uid":"OAYWM","id":"ACW3709","name":"RAJENDAR GATLA"},{"uid":"OA0ZT","id":"ACW3712","name":"SHARATH KUMAR"},{"uid":"OA7FN","id":"ACW3713","name":"SHIVA GUNDRAPU"},{"uid":"OA3ZS","id":"ACW3714","name":"SATISH ANGOTH"},{"uid":"OASKC","id":"ACW3715","name":"SATHISH GUNDA"},{"uid":"OA2AS","id":"ACW3719","name":"ROHITH SIDDULA"},{"uid":"OAELL","id":"ACW3722","name":"SATENDRA YADAV"},{"uid":"OACEO","id":"ACW3723","name":"SAHEB BAITHA"},{"uid":"OAN4F","id":"ACW3725","name":"SATYAP JHA"},{"uid":"OAL95","id":"ACW3726","name":"SANJIT SAH"},{"uid":"OAGK8","id":"ACW3727","name":"SAROJ RAM"},{"uid":"OAHP6","id":"ACW3728","name":"SAT SAH"},{"uid":"OA2RK","id":"ACW3729","name":"SADAM DHUNIYA"},{"uid":"OACLW","id":"ACW3730","name":"SANTOSH MAHARA"},{"uid":"OAMDV","id":"ACW3731","name":"SABIN B K"},{"uid":"OATCL","id":"ACW3732","name":"SAMIM MIYA"},{"uid":"OAFL1","id":"ACW3733","name":"SHANKAR PARIYAR"},{"uid":"OA2M7","id":"ACW3734","name":"SANTOSH HAJAM"},{"uid":"OATJT","id":"ACW3735","name":"SHERPA DARJI"},{"uid":"OAV86","id":"ACW3736","name":"SANTA TAMANG"},{"uid":"OANCX","id":"ACW3737","name":"SHANKAR TATMA"},{"uid":"OAASV","id":"ACW3738","name":"SHARWAN KAMATI"},{"uid":"OAIVK","id":"ACW3739","name":"SANTOSH RAM"},{"uid":"OAMKD","id":"ACW3740","name":"SAMITA BASNET"},{"uid":"OAKZP","id":"ACW3741","name":"SAPANA TAMANG"},{"uid":"OA9T2","id":"ACW3742","name":"SARMILA SUNDAS"},{"uid":"OAQWZ","id":"ACW3743","name":"SAPANA BAJGAIN"},{"uid":"OA6E7","id":"ACW3746","name":"NANDLAL MUKHIYA"},{"uid":"OA6J1","id":"ACW3748","name":"KRISHNA YADAV"},{"uid":"OAWPP","id":"ACW3749","name":"OM JHA"},{"uid":"OAMZ0","id":"ACW3750","name":"NISHAR SHEKH"},{"uid":"OAMI1","id":"ACW3751","name":"BIMALESH YADAV"},{"uid":"OA14V","id":"ACW3752","name":"KRISHAN SINGH"},{"uid":"OABCX","id":"ACW3753","name":"DHARMENDRA SAPHI"},{"uid":"OAZ8G","id":"ACW3754","name":"KAUSHAL KUMAR SAH"},{"uid":"OAY5W","id":"ACW3756","name":"KRISHNA ADHIKARI"},{"uid":"OAQ82","id":"ACW3758","name":"MAN KARKI"},{"uid":"OAE1Z","id":"ACW3759","name":"MAKSUD DARJEE"},{"uid":"OAB7U","id":"ACW3761","name":"MOSTAKIM ANSARI"},{"uid":"OAVLI","id":"ACW3762","name":"MD ANSARI"},{"uid":"OAREF","id":"ACW3763","name":"KHEM KUMARI GIRI"},{"uid":"OA647","id":"ACW3765","name":"LAXMI DHIMAL"},{"uid":"OAM54","id":"ACW3768","name":"NIRMALA RAI"},{"uid":"OAPEM","id":"ACW3769","name":"KAUSHILA RAJBANSHI"},{"uid":"OA83T","id":"ACW3770","name":"MANI DAMAI"},{"uid":"OA0DV","id":"ACW3771","name":"NIR MAYA GURUNG"},{"uid":"OA62J","id":"ACW3772","name":"NABINA SARKI"},{"uid":"OAP0M","id":"ACW3773","name":"LAXMI MAGAR"},{"uid":"OA7HM","id":"ACW3774","name":"LAXMI LAKANDRI"},{"uid":"OAGFJ","id":"ACW3775","name":"JAGABIR YADAV"},{"uid":"OAUXB","id":"ACW3777","name":"JAGDISH MAHATO"},{"uid":"OAZ5W","id":"ACW3778","name":"INDRA RAM"},{"uid":"OAQ1N","id":"ACW3779","name":"JAY RAY"},{"uid":"OADL8","id":"ACW3780","name":"FARMAN NADAF"},{"uid":"OA30Z","id":"ACW3781","name":"HARERAM MAHATO"},{"uid":"OADZE","id":"ACW3782","name":"GOBINDA MAHARA"},{"uid":"OAPPF","id":"ACW3783","name":"INDLESH DAS"},{"uid":"OAZ1G","id":"ACW3784","name":"JENISH SINGH"},{"uid":"OADVO","id":"ACW3785","name":"HASMAT KAWARI"},{"uid":"OAABP","id":"ACW3786","name":"KARNA GIRI"},{"uid":"OABM5","id":"ACW3787","name":"INDRA RAJBANSHI"},{"uid":"OAY4W","id":"ACW3788","name":"KANCHAN MAHATO"},{"uid":"OAQ5I","id":"ACW3789","name":"INDRABAHADUR THAPA"},{"uid":"OADB7","id":"ACW3790","name":"JITENDRA MANDAL"},{"uid":"OABM9","id":"ACW3792","name":"HIRA RAI"},{"uid":"OA74I","id":"ACW3794","name":"KAMALA MAGAR"},{"uid":"OAT5D","id":"ACW3795","name":"KAMALA JOGI"},{"uid":"OAG1O","id":"ACW3796","name":"KALPANA BISHWAKARMA"},{"uid":"OADWI","id":"ACW3797","name":"KAMALA GURUNG"},{"uid":"OAM2X","id":"ACW3798","name":"HUMA SHRESTHA"},{"uid":"OAGQM","id":"ACW3800","name":"SHADULL VOLI SAYYAD"},{"uid":"OA5IB","id":"ACW3802","name":"SURAJ TEKUMATLA"},{"uid":"OA722","id":"ACW3803","name":"SARIP SYED"},{"uid":"OAMKZ","id":"ACW3804","name":"AKASH BHUKYA"},{"uid":"OAVVW","id":"ACW3806","name":"PRASHANTH SHANKAR ELLOLLA"},{"uid":"OA70C","id":"ACW3808","name":"PRAKASH KRANTHI KUMAR"},{"uid":"OA0RK","id":"ACW3810","name":"LAXMAN SIRIGADDE"},{"uid":"OAVUN","id":"ACW3811","name":"SADHANAND BADHOLLA"},{"uid":"OAD3X","id":"ACW3812","name":"SAGAR GADCHANDA"},{"uid":"OAZMJ","id":"ACW3813","name":"RAJESH GURRAPU"},{"uid":"OAL9Y","id":"ACW3817","name":"RAMESH DURGAM"},{"uid":"OASQN","id":"ACW3820","name":"KAMALA NEPALI"},{"uid":"OAJK8","id":"ACW3821","name":"RATNA RAI"},{"uid":"OAHGB","id":"ACW3822","name":"ARATI B K"},{"uid":"OA5AA","id":"ACW3823","name":"DHAN JAISI"},{"uid":"OAJ8D","id":"ACW3824","name":"ASMA KHADKA"},{"uid":"OADNM","id":"ACW3825","name":"ANGFURI LAMA"},{"uid":"OAE8S","id":"ACW3826","name":"MIN BOMJAN"},{"uid":"OAVAD","id":"ACW3827","name":"BIMALA RAI"},{"uid":"OATYC","id":"ACW3828","name":"DHIRAJ SONAR"},{"uid":"OAMTU","id":"ACW3829","name":"DHARMDEV THAKUR"},{"uid":"OA0EA","id":"ACW3830","name":"BALRAM PANDIT"},{"uid":"OAB1Z","id":"ACW3831","name":"BARUN DAS"},{"uid":"OAR7X","id":"ACW3832","name":"BIRENDRA JHA"},{"uid":"OA1GM","id":"ACW3833","name":"BASANT SAHANI"},{"uid":"OAFT2","id":"ACW3834","name":"DIPENDRA CHAUDHARY"},{"uid":"OAWWM","id":"ACW3835","name":"DUKHA MAHATO"},{"uid":"OALR5","id":"ACW3836","name":"BHOLA MAHATO"},{"uid":"OAUD6","id":"ACW3837","name":"DARSHAN DHANUK"},{"uid":"OAABC","id":"ACW3838","name":"BABLU MANDAL DHSANUK"},{"uid":"OACMM","id":"ACW3839","name":"DINESH SAH"},{"uid":"OAY3W","id":"ACW3840","name":"BUDI RAM"},{"uid":"OAT5R","id":"ACW3841","name":"CHHOTU THAKUR"},{"uid":"OAT5N","id":"ACW3842","name":"FAIYAZ ALAM"},{"uid":"OAQ90","id":"ACW3844","name":"DULARCHAN DAS"},{"uid":"OADVZ","id":"ACW3845","name":"BINOD MOHORA"},{"uid":"OARM1","id":"ACW3846","name":"DURGA BK"},{"uid":"OA7FM","id":"ACW3847","name":"BANDANA RAI"},{"uid":"OAKOP","id":"ACW3848","name":"BIMALA BISHWAKARMA"},{"uid":"OA3XP","id":"ACW3849","name":"DEVI KATUWAL"},{"uid":"OALDE","id":"ACW3850","name":"BINA RISIDEV"},{"uid":"OAY57","id":"ACW3852","name":"CHANDRA LIMBU"},{"uid":"OA845","id":"ACW3857","name":"DURGESH PASTHAM"},{"uid":"OAIWB","id":"ACW3859","name":"PRASHANTH BEKKEM"},{"uid":"OAVJW","id":"ACW3861","name":"RAMESH VENKATI"},{"uid":"OA5SL","id":"ACW3863","name":"PRAVEEN BUKYA"},{"uid":"OA1H1","id":"ACW3865","name":"SRINIVAS BATHINI"},{"uid":"OAUJ4","id":"ACW3867","name":"VENU RAGULA"},{"uid":"OAYN9","id":"ACW3868","name":"THARUN PIPPALA"},{"uid":"OAWIR","id":"ACW3870","name":"RAJANARSAIAH MAISA"},{"uid":"OARTP","id":"ACW3872","name":"NARESH AKU RAMULU AKU"},{"uid":"OA704","id":"ACW3873","name":"POOJA MAJHI"},{"uid":"OAAW7","id":"ACW3875","name":"GITA CHAUDHARY"},{"uid":"OAJG0","id":"ACW3877","name":"GANGA THAPA"},{"uid":"OA3D3","id":"ACW3880","name":"SUSMA BK"},{"uid":"OAQ0M","id":"ACW3881","name":"SAMITA DAHAL"},{"uid":"OADHY","id":"ACW3882","name":"RENUKA BISHWAKARMA"},{"uid":"OAJNJ","id":"ACW3883","name":"KALPANA GIRI"},{"uid":"OAWSU","id":"ACW3884","name":"CHET SANGRAULA"},{"uid":"OA7JL","id":"ACW3885","name":"TARA SHRESTHA"},{"uid":"OAP7X","id":"ACW3886","name":"RADHIKA RAI"},{"uid":"OAG4J","id":"ACW3887","name":"KOPPILA RASAILI"},{"uid":"OAFJS","id":"ACW3888","name":"PRAMILA LOPCHAN"},{"uid":"OA8X0","id":"ACW3889","name":"GITA RAMTEL"},{"uid":"OAKTO","id":"ACW3891","name":"ASMITA SUNAR"},{"uid":"OANSC","id":"ACW3892","name":"KARISHMA GOTAME"},{"uid":"OAJZZ","id":"ACW3893","name":"RABITA KHADKA"},{"uid":"OALQ5","id":"ACW3894","name":"SARITA THING"},{"uid":"OALOG","id":"ACW3895","name":"ASHA RAI"},{"uid":"OA01C","id":"ACW3896","name":"ABDUL SAH FAKIR"},{"uid":"OAG7M","id":"ACW3897","name":"AASHMA SYANTHANG"},{"uid":"OAHST","id":"ACW3898","name":"SAPANA B K"},{"uid":"OAHXO","id":"ACW3899","name":"MALATI BOHORA"},{"uid":"OA1GK","id":"ACW3900","name":"REKHA PANDIT"},{"uid":"OAWF6","id":"ACW3901","name":"KRISHNA GHIMIRE"},{"uid":"OAH74","id":"ACW3902","name":"SUSHMA BISHWAKARMA"},{"uid":"OART0","id":"ACW3903","name":"USHA CHAUDHARY"},{"uid":"OADAT","id":"ACW3906","name":"KAMAL PURI"},{"uid":"OAAYG","id":"ACW3914","name":"LEVITICUS MAIYO"},{"uid":"OACZB","id":"ACW3918","name":"FESTUS MUSEMBI"},{"uid":"OAJ06","id":"ACW3919","name":"KENNETH KAMAU"},{"uid":"OAAP6","id":"ACW3922","name":"JEREMIAH NDARWA"},{"uid":"OA75Y","id":"ACW3925","name":"DENNIS KANGARA MUNUNGI"},{"uid":"OAMU1","id":"ACW3927","name":"ANTONY CHIRCHIR"},{"uid":"OAGEW","id":"ACW3929","name":"DOUGLAS ONGONDI"},{"uid":"OAKSB","id":"ACW3930","name":"LAWRENCE WARUI"},{"uid":"OAN7R","id":"ACW3932","name":"NAGENDRA PANDIT"},{"uid":"OAVRV","id":"ACW3943","name":"MOHAMMAD SAQLAIN"},{"uid":"OATZX","id":"ACW3944","name":"NAVEED SHAHZAD"},{"uid":"OAD24","id":"ACW3945","name":"SAQLAIN MUSHTAQ"},{"uid":"OACN9","id":"ACW3946","name":"AWAIS MUHAMMAD TAYYAB"},{"uid":"OASRP","id":"ACW3948","name":"AFAQ AHMED"},{"uid":"OAHIY","id":"ACW3950","name":"MOHAMMAD ROSHAAN"},{"uid":"OALQA","id":"ACW3951","name":"MUHAMMAD ALI"},{"uid":"OAV8N","id":"ACW3952","name":"MUHAMMAD SHAYAN"},{"uid":"OAET1","id":"ACW3953","name":"SHER MUHAMMAD DAUD"},{"uid":"OA659","id":"ACW3954","name":"GHULAM ALI"},{"uid":"OAUZE","id":"ACW3955","name":"MUHAMMAD NAVEED"},{"uid":"OA7HS","id":"ACW3956","name":"FAIZAN ALI"},{"uid":"OA400","id":"ACW3958","name":"KHASEEM MAHAMMAD"},{"uid":"OAKYA","id":"ACW3959","name":"RATNA SHANKAR B K"},{"uid":"OALFX","id":"ACW3961","name":"BINUWA GURUNG"},{"uid":"OAL8Z","id":"ACW3962","name":"INNOCENT PHIRI"},{"uid":"OAAI9","id":"ACW3963","name":"MANGENI ONDEDA"},{"uid":"OAA9Z","id":"ACW3964","name":"KISHOR LAMJEL"},{"uid":"OA2T8","id":"ACW3965","name":"GOVINDA SARKI"},{"uid":"OAU1M","id":"ACW3967","name":"BUDDHARAJ LIMBU"},{"uid":"OA3W6","id":"ACW3968","name":"CHANDRA PARIYAR"},{"uid":"OA1H4","id":"ACW3970","name":"RAMESH ADHIKARI"},{"uid":"OAZSU","id":"ACW3971","name":"ROBERT KAKANDE"},{"uid":"OAR39","id":"ACW3972","name":"JOSEPH KANGETHE"},{"uid":"OAPUK","id":"ACW3974","name":"TARAJUL ABDUL RAZZAK"},{"uid":"OAZBD","id":"ACW3975","name":"ABUL MD CHALEK MIAH"},{"uid":"OAW0J","id":"ACW3976","name":"KAIOM HOSSAIN"},{"uid":"OAT9S","id":"ACW3977","name":"PRAMESH RAUT"},{"uid":"OAV83","id":"ACW3979","name":"SUMITRA GURUNG"},{"uid":"OA663","id":"ACW3980","name":"SRIJANA SONAR"},{"uid":"OA77P","id":"ACW3981","name":"VIVIAN NASSANGA"},{"uid":"OAO80","id":"ACW3982","name":"MARY NAYIGA"},{"uid":"OA74O","id":"ACW3983","name":"RITA GOLE"},{"uid":"OAROP","id":"ACW3985","name":"ADAMS MENSAH"},{"uid":"OACP7","id":"ACW3986","name":"PRABIN THAPA"},{"uid":"OAAJ0","id":"ACW3988","name":"JOHN AMANKWAH"},{"uid":"OA7SY","id":"ACW3990","name":"NISHA NEUPANE"},{"uid":"OAOO7","id":"ACW3991","name":"RINU GAHATRAJ"},{"uid":"OA328","id":"ACW3993","name":"GOVINDA KOIRALA"},{"uid":"OAWG3","id":"ACW3996","name":"THOMAS ANOKYE"},{"uid":"OA5TW","id":"ACW3998","name":"MOHAMED MUNTHAKEEM"},{"uid":"OAFW2","id":"ACW3999","name":"GOMA SHRESTHA"},{"uid":"OAPI4","id":"ACW4000","name":"SUSHILA KA"},{"uid":"OAQ8O","id":"ACW4002","name":"RAM BADHI"},{"uid":"OAA7Y","id":"ACW4003","name":"BRIAN SENTONGO"},{"uid":"OA329","id":"ACW4004","name":"BIKASH SANJEL"},{"uid":"OAB9O","id":"ACW4005","name":"SIKIND MAHATO"},{"uid":"OAL59","id":"ACW4006","name":"BHASKAR MONDAL"},{"uid":"OA8YL","id":"ACW4007","name":"CHAMELI MAGAR"},{"uid":"OAZYD","id":"ACW4008","name":"NELSON GACHUHI"},{"uid":"OAOIB","id":"ACW4009","name":"HEM MAGAR"},{"uid":"OAWFJ","id":"ACW4010","name":"JOHN MWANGI"},{"uid":"OACQ9","id":"ACW4012","name":"DINESH RAI"},{"uid":"OA02O","id":"ACW4014","name":"KOKULAN THANARETNAM"},{"uid":"OAMYY","id":"ACW4015","name":"USHA RAI"},{"uid":"OAUKV","id":"ACW4018","name":"LAXMI LAMGADE"},{"uid":"OAFC2","id":"ACW4019","name":"MD MIAH"},{"uid":"OASVX","id":"ACW4020","name":"CHAMAN SAH"},{"uid":"OA340","id":"ACW4021","name":"KANON DAS"},{"uid":"OAG54","id":"ACW4023","name":"DALI THOKI"},{"uid":"OAA2U","id":"ACW4026","name":"AUGUSTINE MUNYAMBABAZI"},{"uid":"OAF2C","id":"ACW4027","name":"ERIC BIO"},{"uid":"OA89Z","id":"ACW4028","name":"MOHAMED ASIM KHAN"},{"uid":"OAR2U","id":"ACW4029","name":"BAKUL MONDAL"},{"uid":"OADFX","id":"ACW4030","name":"EMMANUEL ANTWI"},{"uid":"OA180","id":"ACW4031","name":"RENUKA LIMBU"},{"uid":"OAUE4","id":"ACW4033","name":"MOHAMED MOHIDEEN"},{"uid":"OA00K","id":"ACW4035","name":"MOHAMMAD UDDIN"},{"uid":"OAIYF","id":"ACW4036","name":"WASHIK ANSARI"},{"uid":"OA4TH","id":"ACW4038","name":"TIKAMAYA MAGAR"},{"uid":"OAXKR","id":"ACW4041","name":"JIT LIMBU"},{"uid":"OAS7H","id":"ACW4044","name":"MACKLINE KATWINE"},{"uid":"OA7TS","id":"ACW4045","name":"GANESH NARSAIAH MUDRAKOLLA"},{"uid":"OAUZ4","id":"ACW4048","name":"RAYMOND WANGUI"},{"uid":"OAHGM","id":"ACW4049","name":"MOAMMAD MAJID"},{"uid":"OAZT6","id":"ACW4050","name":"JUMAYEL MONDAL"},{"uid":"OA91L","id":"ACW4051","name":"JOEL JUNIO"},{"uid":"OA473","id":"ACW4052","name":"SANGITA TAMANG"},{"uid":"OAF0I","id":"ACW4054","name":"PIUS WANYONYI"},{"uid":"OAT74","id":"ACW4055","name":"MARGARET CHEMUTAI"},{"uid":"OAWWF","id":"ACW4056","name":"MARITES SORIANO"},{"uid":"OAAR2","id":"ACW4058","name":"MUHAMMAD UDDIN"},{"uid":"OAFSD","id":"ACW4059","name":"DURGA MAJHI"},{"uid":"OA719","id":"ACW4060","name":"MIN ACHARYA"},{"uid":"OAZL3","id":"ACW4061","name":"JIBACHHA SAH"},{"uid":"OACRO","id":"ACW4062","name":"PATRICK SEBBAALE"},{"uid":"OA1KZ","id":"ACW4063","name":"BHUPA RAI"},{"uid":"OA4NU","id":"ACW4064","name":"LIEZEL GLORIA"},{"uid":"OAN12","id":"ACW4076","name":"BIJITA RAJDHAMI"},{"uid":"OAE1X","id":"ACW4077","name":"SUSILA B K"},{"uid":"OA85B","id":"ACW4078","name":"ASMITA CHHETRI"},{"uid":"OAXPO","id":"ACW4080","name":"NIRMALA SARKI"},{"uid":"OA7RK","id":"ACW4082","name":"SAKUNTALA MURMU"},{"uid":"OAHWA","id":"ACW4084","name":"JOHN KIHARA"},{"uid":"OAE7R","id":"ACW4085","name":"SAMUEL MOKAYA"},{"uid":"OAFFC","id":"ACW4090","name":"MUHAMMAD MUHAMMAD SIDDIQUE"},{"uid":"OASO9","id":"ACW4091","name":"NOMAN BABAR HUSSAIN KHAN"},{"uid":"OAPVD","id":"ACW4094","name":"SHABBIR MOHAMMED SHAIK"},{"uid":"OAZ17","id":"ACW4098","name":"MD KAWSAR"},{"uid":"OAWW2","id":"ACW4101","name":"HUSNAIN SADDIQUE"},{"uid":"OA5HS","id":"ACW4102","name":"MUHAMMAD SAJID NADEEM"},{"uid":"OA7K7","id":"ACW4106","name":"ROHIT MANDAL"},{"uid":"OAUMJ","id":"ACW4110","name":"SHUBHAS KUMAR SINGH"},{"uid":"OA8HN","id":"ACW4114","name":"RAM PASWAN"},{"uid":"OAGA9","id":"ACW4122","name":"BIBEK YADAV"},{"uid":"OA1XI","id":"ACW4129","name":"UMESH RAUT"},{"uid":"OAW8F","id":"ACW4134","name":"DEBENDRA KARKI"},{"uid":"OAR84","id":"ACW4136","name":"GOMA JOGI"},{"uid":"OA0GF","id":"ACW4137","name":"PABITRA GOGI"},{"uid":"OA8RT","id":"ACW4138","name":"SUMINA MAGAR"},{"uid":"OAPNE","id":"ACW4140","name":"SANGITA GHIMIRE"},{"uid":"OA4HW","id":"ACW4200","name":"MUHAMMAD RAZA SOHAIL GUL"},{"uid":"OA1MA","id":"ACW4208","name":"MILLICENT CHEPKURUI"},{"uid":"OA3X1","id":"ACW4211","name":"JULIAN ONYANGO"},{"uid":"OAF5O","id":"ACW4214","name":"MARY REUBEN"},{"uid":"OAVXB","id":"ACW4217","name":"ASNETY KABINGA"},{"uid":"OAZ0W","id":"ACW4225","name":"PUJA LAMA TAMANG"},{"uid":"OAEJ3","id":"ACW4226","name":"ANITA TAMANG"},{"uid":"OAXEN","id":"ACW4271","name":"NIKHIL KUMAR"},{"uid":"OARNS","id":"ACW4311","name":"MUNIM MATLOOB HUSSAIN"},{"uid":"OAES7","id":"ACW4312","name":"HAMZA MUHAMMAD JAVED"},{"uid":"OATXH","id":"ACW4317","name":"HEZBULLAH ULLAH"},{"uid":"OARRO","id":"ACW4319","name":"NAIK SHAH SAID ALI SHAH"},{"uid":"OAQL1","id":"ACW4341","name":"CHANDAN RAY"},{"uid":"OA8RU","id":"ACW4371","name":"HASSAN HAYAT"},{"uid":"OA2VV","id":"ACW4382","name":"HAMMAD AHMAD"},{"uid":"OABSO","id":"ACW4385","name":"MUHAMMAD KHAN"},{"uid":"OACK6","id":"ACW4395","name":"DAUD KHAN"},{"uid":"OAOSW","id":"ACW4397","name":"KHALIL NAWAZ"},{"uid":"OAINS","id":"ACW4412","name":"SADRE SHEKH"},{"uid":"OA1TG","id":"ACW4413","name":"AANAND KUMAR SAH"},{"uid":"OAISQ","id":"ACW4415","name":"SHATROHAN MANDAL"},{"uid":"OA43A","id":"ACW4416","name":"MUKESH KUMAR SAHANI"},{"uid":"OA510","id":"ACW4417","name":"SANTOSH MANDAL"},{"uid":"OA07N","id":"ACW4419","name":"MITHILESH MAHARA"},{"uid":"OAKPP","id":"ACW4421","name":"SATISH KUMAR YADAV"},{"uid":"OABCO","id":"ACW4422","name":"SANJAY RAY YADAV"},{"uid":"OAF7W","id":"ACW4425","name":"SIKINDAR RAY"},{"uid":"OA2FV","id":"ACW4426","name":"SANTOSH KUMAR YADAV"},{"uid":"OAWVC","id":"ACW4427","name":"CHANDRA SHEKHAR RAY"},{"uid":"OA3UQ","id":"ACW4437","name":"JITENDRA RAY"},{"uid":"OA93I","id":"ACW4438","name":"DIPESH KUMAR MAHATO"},{"uid":"OAA9S","id":"ACW4439","name":"BIBEK RAY"},{"uid":"OA5NV","id":"ACW4440","name":"SALIM MANSURI"},{"uid":"OAD8U","id":"ACW4442","name":"SANTU KUMAR KAPAIR"},{"uid":"OAS2D","id":"ACW4443","name":"BIMLESH KUMAR KAPAIR"},{"uid":"OA49C","id":"ACW4444","name":"BIKASH KUMAR YADAV"},{"uid":"OAQH6","id":"ACW4445","name":"RAM BISHWAS RAY YADAV"},{"uid":"OA5J8","id":"ACW4447","name":"SHEKH GULAM ASIN"},{"uid":"OAVVE","id":"ACW4448","name":"PAPPU GIRI"},{"uid":"OAMF0","id":"ACW4449","name":"DIPESH YADAV"},{"uid":"OALYR","id":"ACW4450","name":"ANBARUL RAIN"},{"uid":"OAPH0","id":"ACW4476","name":"MUHAMMAD DANIAL"},{"uid":"OA2MH","id":"ACW4481","name":"SHERAZ AHMED"},{"uid":"OAVVO","id":"ACW4482","name":"ABDULLAH INAYAT ULLAH KHAN"},{"uid":"OAFY5","id":"ACW4484","name":"ASAF IQBAL"},{"uid":"OA38S","id":"ACW4486","name":"HAMMAD SAJID"},{"uid":"OAHQM","id":"ACW4487","name":"ABDUR RAZIQ"},{"uid":"OAK7C","id":"ACW4488","name":"HASSAN KHAN"},{"uid":"OA6UB","id":"ACW4489","name":"HASSAN ZADA"},{"uid":"OAUAE","id":"ACW4490","name":"MUHAMMAD SHAHMIR BUTT"},{"uid":"OAWJA","id":"ACW4499","name":"AHMED HASSAN SHAHZAD"},{"uid":"OAHU0","id":"ACW4500","name":"MUHAMMAD ABUBAKAR"},{"uid":"OAHR9","id":"ACW4501","name":"SYED KAMRAN SHAH"},{"uid":"OA2Y7","id":"ACW4502","name":"SYED TAHIR ALI SHAH"},{"uid":"OA1WY","id":"ACW4503","name":"WAQAR AHMED"},{"uid":"OAGWK","id":"ACW4504","name":"AZEEM DAD"},{"uid":"OAQVN","id":"ACW4508","name":"AKHILESH PANDIT"},{"uid":"OAEGK","id":"ACW4511","name":"AJAY KUMAR DAS"},{"uid":"OAX60","id":"ACW4513","name":"SURENDRA RAY YADAV"},{"uid":"OAKXZ","id":"ACW4527","name":"NIZAM ALI"},{"uid":"OAQAS","id":"ACW4530","name":"HAMZA BASHIR BASHIR AHMED"},{"uid":"OAYQ2","id":"ACW4531","name":"NIHAR ALI MUHAMMAD ALI"},{"uid":"OACGE","id":"ACW4532","name":"FAHAD RAFIQ MUHAMMAD RAFIQ"},{"uid":"OA382","id":"ACW4533","name":"HAFIZ MUSSAB MUSHTAQ MUSHTAQ"},{"uid":"OASGE","id":"ACW4534","name":"BILAL HABIB ABDUL HABIB"},{"uid":"OAVKX","id":"ACW4535","name":"REHAN ADEEL MUHAMMAD ATIQ AMIR"},{"uid":"OAUMZ","id":"ACW4536","name":"USMAN TALIB TALIB HUSSAIN"},{"uid":"OAHSW","id":"ACW4538","name":"YASIR AIZAK JAN KHOKHAR"},{"uid":"OAOLF","id":"ACW4539","name":"SHAH ZEB RAHMAN QABIL RAHMAN"},{"uid":"OAWAM","id":"ACW4540","name":"MUHAMMAD BABAR TAJ MUHAMMAD"},{"uid":"OAUKK","id":"ACW4541","name":"SAUD AHMED SAFDAR ALI"},{"uid":"OAWEJ","id":"ACW4545","name":"SHABIR AHMAD SHER AFZAL KHAN"},{"uid":"OAX4C","id":"ACW4546","name":"MUHAMMAD NAUMAN JAMIL"},{"uid":"OAI6L","id":"ACW4547","name":"MUHAMMAD MEHRAN ALLAH DITTA"},{"uid":"OAQDR","id":"ACW4548","name":"HIZAR HAYAT KOUSAR ALI"},{"uid":"OA20H","id":"ACW4550","name":"HAMAD IRSHAD AHMED"},{"uid":"OA7UL","id":"ACW4551","name":"MUHAMMAD NASEER"},{"uid":"OA74G","id":"ACW4552","name":"ABUL FAJAL"},{"uid":"OANAQ","id":"ACW4553","name":"PRADIP RAY"},{"uid":"OAKPS","id":"ACW4554","name":"SAROJ MANDAL"},{"uid":"OAK5D","id":"ACW4557","name":"LILA BHUJEL"},{"uid":"OAGA1","id":"ACW4560","name":"SABINA LAMA SYANGBO"},{"uid":"OAI0H","id":"ACW4564","name":"KESHAV KUMAR JHA"},{"uid":"OAUE7","id":"ACW4565","name":"MUHAMMAD NAFEES HIRMAT HUSSAIN"},{"uid":"OANP9","id":"ACW4566","name":"ZAIN KHALID KHALID HUSSAIN"},{"uid":"OAF2M","id":"ACW4567","name":"JAWAD TAHIR SAIN TAHIR HUSSAIN"},{"uid":"OAAJJ","id":"ACW4568","name":"MUHAMMAD FAIZAN YOUSAF"},{"uid":"OA8CC","id":"ACW4569","name":"HANIF ULLAH MIR SHAH"},{"uid":"OAE5A","id":"ACW4570","name":"MAZHAR ZEB RAHID ULLAH"},{"uid":"OA3KN","id":"ACW4571","name":"DAUD KHAN RAJWALI KHAN"},{"uid":"OALZN","id":"ACW4572","name":"ZAKIR HUSSAIN RUSTAM KHAN"},{"uid":"OA6UN","id":"ACW4588","name":"ABDUL KAWARI"},{"uid":"OA1O9","id":"ACW4589","name":"MD SARIPH KAWARI"},{"uid":"OAVGL","id":"ACW4590","name":"SUBHASH KUMAR KAPAR"},{"uid":"OA7I4","id":"ACW4591","name":"AJAY KUMAR MANDAL"},{"uid":"OA7CD","id":"ACW4593","name":"MD MOSTAK SHEKH"},{"uid":"OAORC","id":"ACW4594","name":"MD KALAM SAH"},{"uid":"OAXT1","id":"ACW4595","name":"MD SAJID ALI"},{"uid":"OA0ZG","id":"ACW4596","name":"SIKINDRA RAM"},{"uid":"OA6ZI","id":"ACW4597","name":"BIKRAM RAUT"},{"uid":"OA9K8","id":"ACW4598","name":"GAJENDRA KUMAR RAUT"},{"uid":"OAG83","id":"ACW4599","name":"RAMESH MOCHI"},{"uid":"OA6PZ","id":"ACW4600","name":"PHUL MAHARA"},{"uid":"OAGML","id":"ACW4601","name":"BIBEK KAMATI"},{"uid":"OA548","id":"ACW4602","name":"BINOD KUMAR YADAV"},{"uid":"OASFU","id":"ACW4605","name":"ROSHAN MUKHIYA"},{"uid":"OAGWG","id":"ACW4606","name":"AAKASH KUMAR SINGH"},{"uid":"OAW32","id":"ACW4607","name":"SADDAM HUSEN KHAN"},{"uid":"OAAA1","id":"ACW4625","name":"DINESH KUMAR POUDEL"},{"uid":"OATR1","id":"ACW4630","name":"KHIZAR MEHMOOD MUHAMMAD"},{"uid":"OAF10","id":"ACW4633","name":"OM PRAKASH YADAV"},{"uid":"OALWB","id":"ACW4634","name":"ARTAB PAL"},{"uid":"OA8R0","id":"ACW4666","name":"VALENTINE NJERI GITURU"},{"uid":"OAPZG","id":"ACW4702","name":"BABLU RAUT"},{"uid":"OAS2Q","id":"ACW4703","name":"SANJIV PANDIT"},{"uid":"OA83S","id":"ACW4704","name":"RAJESH KUMAR SAH"},{"uid":"OATTA","id":"ACW4705","name":"RAHUL KUMAR PANDIT"},{"uid":"OAQJH","id":"ACW4706","name":"JAGBIR MANDAL"},{"uid":"OAB9Z","id":"ACW4707","name":"BALRAM MUKHIYA"},{"uid":"OAG5J","id":"ACW4708","name":"JAKIR KAWARI"},{"uid":"OA14M","id":"ACW480","name":"MOHAMMAD RAHMAN"},{"uid":"OA0LQ","id":"ACW489","name":"MOHAMMAD RASAL"},{"uid":"OA6OS","id":"ACW510","name":"ZIAUL ZAMAL"},{"uid":"OAY1K","id":"ACW596","name":"OBAYEDULLAH ABULHOSSAIN"},{"uid":"OALFQ","id":"ACW762","name":"JAHANGIR ALAM"},{"uid":"OAUXV","id":"ACW802","name":"NITA TAMANG"},{"uid":"OAJSD","id":"ACW907","name":"RAM BALAMI"},{"uid":"OA4TF","id":"ACW921","name":"SOM BOLAN"},{"uid":"OAAWR","id":"ACW997","name":"KRISHNA SUHANG"}]
-;
-const TOTAL = DATA.length;
+/* ---- App Data & Logic ---- */
+
+const DATA = [
+  {"uid":"OA6YU","id":"ACW056","name":"SURESH GURANG"},
+  {"uid":"OAKZX","id":"ACW1023","name":"RAJANIKANTH NALLARAJA"},
+  {"uid":"OARFU","id":"ACW1062","name":"RAMNAIN LODH"},
+  {"uid":"OAIO7","id":"ACW1074","name":"SANTOSH SAH"},
+  {"uid":"OAKDH","id":"ACW1081","name":"RADHIKA SITAULA"},
+  {"uid":"OA0QK","id":"ACW1082","name":"MAN RAI LIMBU"},
+  {"uid":"OACEE","id":"ACW1111","name":"THARANIRAJ KANNAN"},
+  {"uid":"OANUU","id":"ACW1149","name":"PRAKASH GAULI"},
+  {"uid":"OAE20","id":"ACW1188","name":"IBRAHIM MIYA"},
+  {"uid":"OAF4G","id":"ACW1232","name":"KALPANA SAMBAHAMPHE"},
+  {"uid":"OAS56","id":"ACW1251","name":"DIPEN RAI"},
+  {"uid":"OAG71","id":"ACW1274","name":"BIKASH ROKA"},
+  {"uid":"OASEJ","id":"ACW1298","name":"KUL KAMI KALIKOTE"},
+  {"uid":"OA3FN","id":"ACW1342","name":"ANIL CHAN"},
+  {"uid":"OAEO2","id":"ACW1345","name":"FIRDOS SIDDIQUI"},
+  {"uid":"OA9Q8","id":"ACW1358","name":"BIPIN GURAGAIN"},
+  {"uid":"OATQN","id":"ACW1370","name":"TIKA RAI"},
+  {"uid":"OALEW","id":"ACW1390","name":"HANSHRAJ DHAMI"},
+  {"uid":"OASP3","id":"ACW1423","name":"NAVAREDNAM VANNIYASINGAM"},
+  {"uid":"OAUPH","id":"ACW1469","name":"MD BEPARY"},
+  {"uid":"OA99K","id":"ACW1549","name":"MD HOSSAIN"},
+  {"uid":"OAJOD","id":"ACW1618","name":"AMBRESH YADAV"},
+  {"uid":"OA58S","id":"ACW1620","name":"UMESH MAHARA"},
+  {"uid":"OA8ZD","id":"ACW1658","name":"BIR BAHADUR BISHWAKARMA"},
+  {"uid":"OAQLC","id":"ACW1663","name":"DHARMENDRA RAY"},
+  {"uid":"OARP2","id":"ACW1679","name":"SANJAY PASMAN"},
+  {"uid":"OAT9G","id":"ACW1718","name":"SEKANATHAN THAMOTHARAN"},
+  {"uid":"OAI5R","id":"ACW1762","name":"BHESH KHADKA"},
+  {"uid":"OA0YQ","id":"ACW1769","name":"BIMALA BHATTARAI"},
+  {"uid":"OAKNP","id":"ACW1844","name":"PREM KHATRI"},
+  {"uid":"OAOBA","id":"ACW1877","name":"PRAGATI LAMA"},
+  {"uid":"OACYE","id":"ACW1886","name":"THAYAPARAN KRISHNAPILLAI"},
+  {"uid":"OAYBB","id":"ACW1895","name":"SIVAPARAN SIVARASA"},
+  {"uid":"OA4DD","id":"ACW1911","name":"LALITA MAGAR"},
+  {"uid":"OASIB","id":"ACW1959","name":"SHARAFAT ALI"},
+  {"uid":"OA9R7","id":"ACW1965","name":"RAMU SARBARIYA"},
+  {"uid":"OAO7Y","id":"ACW1988","name":"SAFIKUL MANSURI"},
+  {"uid":"OAJDN","id":"ACW2026","name":"SAPANA MAGAR"},
+  {"uid":"OAEYR","id":"ACW2048","name":"UMA BHUJEL"},
+  {"uid":"OAMEH","id":"ACW2077","name":"BABO SHAFIQUE RAHMAN"},
+  {"uid":"OA1S8","id":"ACW2078","name":"TANVIR SIDDIKI"},
+  {"uid":"OACVY","id":"ACW2089","name":"GANGA RAI"},
+  {"uid":"OAGM8","id":"ACW213","name":"SUTHAKARAN THIYAGARASA"},
+  {"uid":"OAJZ6","id":"ACW2206","name":"RAM KAMAIT"},
+  {"uid":"OARCX","id":"ACW2246","name":"KHAMISI CHARO"},
+  {"uid":"OAI8B","id":"ACW2250","name":"RUPESH MANDAL"},
+  {"uid":"OAQMB","id":"ACW2353","name":"SANGITA LIMBU"},
+  {"uid":"OAWTR","id":"ACW2357","name":"INDRAJIT SAH"},
+  {"uid":"OASYW","id":"ACW2376","name":"LAXMI MAGAR"},
+  {"uid":"OAO8G","id":"ACW2399","name":"SHAHALAM ALIM UDDIN MIAH"},
+  {"uid":"OA08F","id":"ACW2402","name":"MOHAMMAD KHAN"},
+  {"uid":"OAKF7","id":"ACW2415","name":"SACHIN RAI"},
+  {"uid":"OAVPY","id":"ACW2425","name":"DIPENDRA RAM"},
+  {"uid":"OA234","id":"ACW2495","name":"IHTISHAM HAQ"},
+  {"uid":"OA5KG","id":"ACW2508","name":"KABEER AHMED"},
+  {"uid":"OACBC","id":"ACW2510","name":"JULIUS BIWOTT"},
+  {"uid":"OAKM5","id":"ACW2523","name":"SANJIV RAM"},
+  {"uid":"OA3MD","id":"ACW2527","name":"COLLINS KIMUTAI"},
+  {"uid":"OAGTI","id":"ACW2536","name":"SHABIR HUSAIN HUSSAIN ZAHID"},
+  {"uid":"OABT0","id":"ACW2547","name":"AVINASH DAS"},
+  {"uid":"OAKCT","id":"ACW2551","name":"RAJ MUKHIYA"},
+  {"uid":"OA95I","id":"ACW2557","name":"RAM RAY"},
+  {"uid":"OARZU","id":"ACW2558","name":"SHATARUDHAN SAH"},
+  {"uid":"OANSF","id":"ACW2606","name":"HASNAIN ZAFAR"},
+  {"uid":"OAVNY","id":"ACW2618","name":"JAFIR RANGREJ"},
+  {"uid":"OAJ8S","id":"ACW2638","name":"OSAMA IHSAN"},
+  {"uid":"OARK6","id":"ACW2642","name":"MUHAMMAD RAUF ABDUL"},
+  {"uid":"OADR6","id":"ACW2657","name":"THADEUS AYEGA"},
+  {"uid":"OAQHK","id":"ACW2666","name":"KENNETH KIMELI"},
+  {"uid":"OA4T0","id":"ACW2681","name":"BETHWEL LETTING"},
+  {"uid":"OAE83","id":"ACW2719","name":"PRAWEJ SHEKH"},
+  {"uid":"OAO3E","id":"ACW2733","name":"USMAN ALI ALI RIASAT"},
+  {"uid":"OAYDQ","id":"ACW2734","name":"SANA HASSAN GUL"},
+  {"uid":"OAL5K","id":"ACW2751","name":"SUBODH YADAV"},
+  {"uid":"OAURL","id":"ACW2752","name":"DEVSHARAN YADAV"},
+  {"uid":"OAYXU","id":"ACW2773","name":"USMAN TAJ AYEEN"},
+  {"uid":"OAL1E","id":"ACW2794","name":"ANOJ MANDAL"},
+  {"uid":"OAGB9","id":"ACW2838","name":"DENNIS MWANGI"},
+  {"uid":"OA9N5","id":"ACW2843","name":"SUNIL RAY"},
+  {"uid":"OA5TQ","id":"ACW2895","name":"AMMAD KHALID MEHMOOD"},
+  {"uid":"OA18H","id":"ACW2896","name":"ADEEB REHMAN NAZIR AHMED"},
+  {"uid":"OAY4X","id":"ACW2923","name":"MANISH YADAV"},
+  {"uid":"OALJO","id":"ACW2926","name":"GHULAM BAIG"},
+  {"uid":"OAVC0","id":"ACW2927","name":"AHTISHAM AMJAD JAVED"},
+  {"uid":"OABJ0","id":"ACW2952","name":"ABINASH MAHATO"},
+  {"uid":"OA462","id":"ACW2983","name":"JAMES KOECH"},
+  {"uid":"OAI62","id":"ACW3026","name":"RAMAKRISHNA LAXMAN PARSA"},
+  {"uid":"OARIO","id":"ACW3086","name":"OBADIAH MARUS"},
+  {"uid":"OAC37","id":"ACW3094","name":"SIMION OBAIGWA"},
+  {"uid":"OAFPE","id":"ACW3108","name":"AASHIK MANSUR"},
+  {"uid":"OASBH","id":"ACW3109","name":"HARI DAS"},
+  {"uid":"OALAU","id":"ACW3113","name":"NISHAN PARIYAR"},
+  {"uid":"OAYB9","id":"ACW3115","name":"AJAY DAS"},
+  {"uid":"OAWW4","id":"ACW3118","name":"SHIV DAS"},
+  {"uid":"OAJFO","id":"ACW3129","name":"WESLEY KIPLAGAT"},
+  {"uid":"OA9D6","id":"ACW3150","name":"MD TAPADAR"},
+  {"uid":"OAIK1","id":"ACW3172","name":"ZUBER KHAN"},
+  {"uid":"OA7PP","id":"ACW3173","name":"MEHRAJ MOHD"},
+  {"uid":"OA6OL","id":"ACW3174","name":"AKHEEL SHAIK"},
+  {"uid":"OAF67","id":"ACW3178","name":"JOSEPH KIMATHI"},
+  {"uid":"OAECQ","id":"ACW3179","name":"MUHAMMAD MUHAMMAD KARIM"},
+  {"uid":"OAC8T","id":"ACW3180","name":"MUHAMMAD MUHAMMAD TARIQ"},
+  {"uid":"OA7P6","id":"ACW3183","name":"SAYANNA SUDDALA"},
+  {"uid":"OAMKF","id":"ACW3184","name":"AHMAD JAMAL"},
+  {"uid":"OAJ9X","id":"ACW3185","name":"RAVI PESARI"},
+  {"uid":"OA98F","id":"ACW3190","name":"ARUN RAO"},
+  {"uid":"OAAQS","id":"ACW3193","name":"SHIVA CHUKKA"},
+  {"uid":"OAZW5","id":"ACW3196","name":"AJAY VANGALA SUDHAKAR"},
+  {"uid":"OAQNT","id":"ACW3198","name":"SAJJAD ZIARAT KHAN"},
+  {"uid":"OA22M","id":"ACW3199","name":"USAMA MINHAJ UDDIN"},
+  {"uid":"OA1HK","id":"ACW3201","name":"MAQSOOD MUHAMMAD"},
+  {"uid":"OAB4J","id":"ACW3204","name":"RAM RAY"},
+  {"uid":"OAHYQ","id":"ACW3205","name":"BHARAT THAKUR"},
+  {"uid":"OADHR","id":"ACW3206","name":"RAHAMAT ALI"},
+  {"uid":"OALNU","id":"ACW3207","name":"DURGA CHAPAGAI"},
+  {"uid":"OAENM","id":"ACW3208","name":"SHOAIB KHAN"},
+  {"uid":"OA6KF","id":"ACW3209","name":"BRIAN KITHURE"},
+  {"uid":"OAYVR","id":"ACW3210","name":"BRIAN MWANGI MUREITHI"},
+  {"uid":"OAFRH","id":"ACW3213","name":"MOSES MUKASA"},
+  {"uid":"OA39D","id":"ACW3215","name":"DENNIS MURIUKI"},
+  {"uid":"OAOYY","id":"ACW3217","name":"TONNY KEREDA"},
+  {"uid":"OAH10","id":"ACW3219","name":"JOSEPH MUTONGA"},
+  {"uid":"OAWFU","id":"ACW3220","name":"KAMALA DAHAL"},
+  {"uid":"OA0M5","id":"ACW3221","name":"DHAN KARKI"},
+  {"uid":"OAAAQ","id":"ACW3222","name":"HASTA RAI"},
+  {"uid":"OAG9W","id":"ACW3223","name":"LAXMI KHADKA"},
+  {"uid":"OAASA","id":"ACW3224","name":"RENUKA TOLANGI"},
+  {"uid":"OAW00","id":"ACW3225","name":"RIMA HALAWAI"},
+  {"uid":"OAT5M","id":"ACW3227","name":"DHANMAYA BISTA"},
+  {"uid":"OANPN","id":"ACW3228","name":"GEETA SUNUWAR"},
+  {"uid":"OA96D","id":"ACW3229","name":"HIRAMAYA KARKI"},
+  {"uid":"OADXV","id":"ACW3230","name":"MAMATA TAMANG"},
+  {"uid":"OA4NF","id":"ACW3231","name":"PRATIMA RAI"},
+  {"uid":"OAV5U","id":"ACW3232","name":"RATNAKALA DAHAL"},
+  {"uid":"OA5AL","id":"ACW3233","name":"SANJITA MECHE"},
+  {"uid":"OAQUK","id":"ACW3235","name":"SARMILA YONGYA"},
+  {"uid":"OAQ9Q","id":"ACW3239","name":"DAWOOD JAVAID MASIH"},
+  {"uid":"OAYL6","id":"ACW3240","name":"HASSAN MUHAMMAD JAMIL AKHTAR"},
+  {"uid":"OA9K2","id":"ACW3241","name":"ASAD SAFDAR ALI"},
+  {"uid":"OA4ER","id":"ACW3242","name":"JAVED DILAWAR KHAN"},
+  {"uid":"OAMH3","id":"ACW3244","name":"ALICE OIRERE"},
+  {"uid":"OAAJL","id":"ACW3245","name":"BETH GICHANGI"},
+  {"uid":"OAN66","id":"ACW3246","name":"CAROLYNE JEPKOECH"},
+  {"uid":"OA3I4","id":"ACW3247","name":"CHRISTINE KWANGA"},
+  {"uid":"OAQ9F","id":"ACW3248","name":"CYNTHIA NGACHI"},
+  {"uid":"OA0I7","id":"ACW3250","name":"DORCA ORENGE"},
+  {"uid":"OAC9C","id":"ACW3252","name":"ESTHER KIMANI"},
+  {"uid":"OACUU","id":"ACW3253","name":"EUNICE MISE"},
+  {"uid":"OAW5N","id":"ACW3255","name":"EVALINE KAMAU"},
+  {"uid":"OAQ0Z","id":"ACW3256","name":"FAITH CHEROP"},
+  {"uid":"OAS4J","id":"ACW3257","name":"FLORENCE CHEPKURUI"},
+  {"uid":"OAJ5A","id":"ACW3259","name":"GLADYS MUTURI"},
+  {"uid":"OAV3X","id":"ACW3260","name":"GLORIA RUTO"},
+  {"uid":"OATFO","id":"ACW3262","name":"JACKLINE JERONO"},
+  {"uid":"OA046","id":"ACW3264","name":"JACKLINE WAITHERERO"},
+  {"uid":"OAUSJ","id":"ACW3265","name":"JOAN SEUREI"},
+  {"uid":"OABWK","id":"ACW3267","name":"LONAH ONGAKI"},
+  {"uid":"OA3UZ","id":"ACW3268","name":"MARION JEROTICH"},
+  {"uid":"OAZ0N","id":"ACW3269","name":"MARY REBECCA"},
+  {"uid":"OAWP4","id":"ACW3273","name":"NAOMY CHEPKOSGEI"},
+  {"uid":"OADJ2","id":"ACW3274","name":"NAUM JEPLETING"},
+  {"uid":"OAKZJ","id":"ACW3275","name":"NENO BARMASAI"},
+  {"uid":"OA2AL","id":"ACW3276","name":"NESTA MUCHIRA"},
+  {"uid":"OA0GO","id":"ACW3277","name":"OLIVIA CHEMEITOI"},
+  {"uid":"OAJKX","id":"ACW3278","name":"RAHAB WANGESHI"},
+  {"uid":"OA4FY","id":"ACW3279","name":"ROSEMARY NJUGUNA"},
+  {"uid":"OA1DA","id":"ACW3280","name":"RUTH ONKWARE"},
+  {"uid":"OAAIE","id":"ACW3283","name":"SCOLASTICA MWANGI"},
+  {"uid":"OA0BY","id":"ACW3284","name":"STELLAH CHERUBET"},
+  {"uid":"OABK5","id":"ACW3285","name":"STELLAH CHEPCHIRCHIR"},
+  {"uid":"OAXYK","id":"ACW3286","name":"SUSAN CHEROP"},
+  {"uid":"OAPA8","id":"ACW3287","name":"SILVIAH OKEMWA"},
+  {"uid":"OA446","id":"ACW3288","name":"TABITHA JEROTICH"},
+  {"uid":"OA0A6","id":"ACW3289","name":"TRUPHENA MOCHECHE"},
+  {"uid":"OAH1M","id":"ACW3290","name":"VALENTINE JELIMO"},
+  {"uid":"OAILM","id":"ACW3291","name":"VIOLET MUTUNGA"},
+  {"uid":"OAMW7","id":"ACW3293","name":"MANIKA MECHI"},
+  {"uid":"OAZA4","id":"ACW3294","name":"NIRMALA SIGDEL"},
+  {"uid":"OA1N4","id":"ACW3295","name":"BISHNU TAMANG"},
+  {"uid":"OA8JM","id":"ACW3296","name":"MAN TAMANG"},
+  {"uid":"OA3X0","id":"ACW3297","name":"GAYATRI TAMANG"},
+  {"uid":"OAGSG","id":"ACW3298","name":"DISMAS NTUBRI"},
+  {"uid":"OA21B","id":"ACW3299","name":"RODGERS TOO"},
+  {"uid":"OACZ4","id":"ACW3300","name":"SAMUEL KAMAU"},
+  {"uid":"OAX8W","id":"ACW3301","name":"ALLAN SAWE"},
+  {"uid":"OAJB2","id":"ACW3302","name":"VINCENT KIPNGENO"},
+  {"uid":"OAL8X","id":"ACW3303","name":"FREDRICK SHIKUVALE"},
+  {"uid":"OADDN","id":"ACW3304","name":"SIMON MUIRURI"},
+  {"uid":"OAQVO","id":"ACW3305","name":"ELVIS KEEN"},
+  {"uid":"OABLJ","id":"ACW3306","name":"ROBERT MUCHIRI"},
+  {"uid":"OAFBL","id":"ACW3307","name":"DENIS KIMURGOR"},
+  {"uid":"OAYJA","id":"ACW3308","name":"DANSTAN MADANGU"},
+  {"uid":"OAYJJ","id":"ACW3309","name":"PRAISE SHABANJI"},
+  {"uid":"OA7F4","id":"ACW3310","name":"ZACHARY MARISA"},
+  {"uid":"OAO34","id":"ACW3311","name":"ALLAN KIPTOO"},
+  {"uid":"OANWC","id":"ACW3312","name":"EVANS PHILIP"},
+  {"uid":"OAL2W","id":"ACW3313","name":"AUSTINE MUTHONI"},
+  {"uid":"OA7N9","id":"ACW3314","name":"ROY MAKATA"},
+  {"uid":"OAY9W","id":"ACW3315","name":"KEVIN OMBATI"},
+  {"uid":"OA8LH","id":"ACW3316","name":"ROBERT KIMANI"},
+  {"uid":"OALJ9","id":"ACW3317","name":"SIDNEY OKWARO"},
+  {"uid":"OADC9","id":"ACW3318","name":"JOEL NYAMBISA"},
+  {"uid":"OA61A","id":"ACW3319","name":"SAMUEL MUCHAI"},
+  {"uid":"OA5US","id":"ACW3320","name":"ABRAHAM KIPCHIRCHIR"},
+  {"uid":"OALKO","id":"ACW3321","name":"JAVIC AYORA"},
+  {"uid":"OAQQ0","id":"ACW3322","name":"DENNIS KIPKOSGEI"},
+  {"uid":"OA9LA","id":"ACW3323","name":"ANTHONY WANJIRU"},
+  {"uid":"OA5HD","id":"ACW3324","name":"MOSES KIPTOO"},
+  {"uid":"OA7WX","id":"ACW3325","name":"DENNIS KASIDI"},
+  {"uid":"OAC84","id":"ACW3326","name":"CORNELIUS KIPSANG"},
+  {"uid":"OA9IZ","id":"ACW3327","name":"CORNELIUS KIPCHUMBA"},
+  {"uid":"OA07J","id":"ACW3328","name":"DERICK KIPTUM"},
+  {"uid":"OAFGN","id":"ACW3329","name":"MILTON TUM"},
+  {"uid":"OAUBZ","id":"ACW3330","name":"ELI KIPTOO"},
+  {"uid":"OAUDJ","id":"ACW3331","name":"DENIS KIPPROP"},
+  {"uid":"OAE4F","id":"ACW3333","name":"JULIUS WAMANJI"},
+  {"uid":"OA8UJ","id":"ACW3334","name":"DENNIS OSIKEI"},
+  {"uid":"OADUZ","id":"ACW3335","name":"DAVIES KIPKOECH"},
+  {"uid":"OAGSR","id":"ACW3336","name":"BOAZ OCHIENG"},
+  {"uid":"OAVX1","id":"ACW3337","name":"EMMANUEL ZULUNY"},
+  {"uid":"OAHV5","id":"ACW3339","name":"EMMANUEL ROTICH"},
+  {"uid":"OADVR","id":"ACW3341","name":"RODGERS KIPKIRUI"},
+  {"uid":"OAY1N","id":"ACW3342","name":"ADNAS KIPROTICH"},
+  {"uid":"OA60H","id":"ACW3343","name":"NOVESTERS SOME"},
+  {"uid":"OA4NZ","id":"ACW3344","name":"BRANDON MUTHUI"},
+  {"uid":"OAO0W","id":"ACW3345","name":"CHARLES TINDIRA"},
+  {"uid":"OA1SG","id":"ACW3347","name":"KAAN SANG"},
+  {"uid":"OAPRY","id":"ACW3348","name":"GEOFFREY KANJA"},
+  {"uid":"OAIZ3","id":"ACW3350","name":"MARTIN MWANGI"},
+  {"uid":"OAC63","id":"ACW3351","name":"AMOS KIPPROP"},
+  {"uid":"OAUUK","id":"ACW3352","name":"ALVINE WANGU"},
+  {"uid":"OAZHL","id":"ACW3353","name":"CYRUS OMBOGO"},
+  {"uid":"OAU32","id":"ACW3354","name":"JOHN MACHARIA"},
+  {"uid":"OA66W","id":"ACW3355","name":"KEVIN OUMA"},
+  {"uid":"OAM7L","id":"ACW3356","name":"MILTON KIMUTAI"},
+  {"uid":"OAXHN","id":"ACW3357","name":"MUHAMMAD MUHAMMAD AKRAM"},
+  {"uid":"OA5IR","id":"ACW3358","name":"HUZAIFA ALI MUHAMMAD TOUQEER"},
+  {"uid":"OATAC","id":"ACW3360","name":"ASTLE AMJAD MASIH"},
+  {"uid":"OA5OU","id":"ACW3364","name":"MUHAMMAD QAMAR ZAMAN"},
+  {"uid":"OAV27","id":"ACW3365","name":"KAMRAN KARAMAT HUSSAIN MIRZA"},
+  {"uid":"OARIE","id":"ACW3368","name":"IMRAN SHAUKAT"},
+  {"uid":"OAEPI","id":"ACW3369","name":"MUHAMMAD ABDUL KHALIQ"},
+  {"uid":"OAQR6","id":"ACW3370","name":"WAHAB ZAMAN RAJANADEEM MASOOD"},
+  {"uid":"OAVU1","id":"ACW3371","name":"HUSNAIN GHULAM ahmed"},
+  {"uid":"OAJUO","id":"ACW3372","name":"ABDUL RAFAY GHULAM SABIR MIRZA"},
+  {"uid":"OAIP7","id":"ACW3373","name":"ADIL RAHMAN"},
+  {"uid":"OA3QG","id":"ACW3374","name":"ATIF MUHAMMAD nishat"},
+  {"uid":"OAFC0","id":"ACW3376","name":"MUHAMMAD BASHARAT"},
+  {"uid":"OAUZD","id":"ACW3377","name":"ZIYAD HUSSAIN"},
+  {"uid":"OA332","id":"ACW3378","name":"DANIAL ALI MUHAMMAD ILYAS"},
+  {"uid":"OA5C0","id":"ACW3379","name":"IMRAN MASAL khan"},
+  {"uid":"OAQ14","id":"ACW3380","name":"ASHOK YADAV"},
+  {"uid":"OAU5T","id":"ACW3381","name":"YAM BHUJEL"},
+  {"uid":"OAUKJ","id":"ACW3382","name":"IMRAN KHAN"},
+  {"uid":"OA0FL","id":"ACW3383","name":"NABEEL MUHAMMAD FARID KHAN"},
+  {"uid":"OASQH","id":"ACW3384","name":"MUHAMMAD IRSHAD"},
+  {"uid":"OALT8","id":"ACW3386","name":"MUHAMMAD AHSAN UL HAQ"},
+  {"uid":"OAU95","id":"ACW3387","name":"TILAWAT SHAH"},
+  {"uid":"OAFS9","id":"ACW3389","name":"FAISAL AHMED"},
+  {"uid":"OAYWG","id":"ACW3390","name":"FAISAL RAYSAT"},
+  {"uid":"OAAZL","id":"ACW3391","name":"HAMAYUN BAKHTIAR ALI"},
+  {"uid":"OAWTV","id":"ACW3392","name":"HARIS MIR"},
+  {"uid":"OAMA9","id":"ACW3393","name":"SAQIB MASIH"},
+  {"uid":"OAYBR","id":"ACW3394","name":"TAUSEEQ HAIDAR"},
+  {"uid":"OA6RV","id":"ACW3396","name":"FALAK ZAIB"},
+  {"uid":"OAL9V","id":"ACW3399","name":"MAMREZ KHAN"},
+  {"uid":"OAX21","id":"ACW3400","name":"MALIK KHAN"},
+  {"uid":"OA7J6","id":"ACW3401","name":"MUHAMMAD FAZAL IHSAN"},
+  {"uid":"OAMO9","id":"ACW3403","name":"MIAN ULLAH KHAN"},
+  {"uid":"OAW2T","id":"ACW3404","name":"UQAB AHMAD KHAIR MUHAMMAD"},
+  {"uid":"OAG1X","id":"ACW3405","name":"REHMAN ULLAH GULFAM KHAN"},
+  {"uid":"OAAFH","id":"ACW3406","name":"AMIR ALI ZAFAR ALI KHAN"},
+  {"uid":"OAZO7","id":"ACW3408","name":"MUHAMMAD SAID RAHMAN"},
+  {"uid":"OALAL","id":"ACW3409","name":"MUHAMMAD KAMRAN MUHAMMAD"},
+  {"uid":"OAMHS","id":"ACW3411","name":"MUHAMMAD SHAMSHAD KHAN"},
+  {"uid":"OAX5M","id":"ACW3412","name":"MUHAMMAD YOUSAF QADRAT ULLAH"},
+  {"uid":"OAZT6","id":"ACW4050","name":"JUMAYEL MONDAL"}
+];
 
 const qInput = document.getElementById('q');
 const resultsEl = document.getElementById('results');
-const clearBtn = document.getElementById('clearBtn');
 const countLabel = document.getElementById('countLabel');
 const totalLabel = document.getElementById('totalLabel');
+const clearBtn = document.getElementById('clearBtn');
 const toast = document.getElementById('toast');
 const toastText = document.getElementById('toastText');
 
-totalLabel.textContent = TOTAL + ' employees';
-
-function escapeHtml(s){
-  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function escapeHtml(str){
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
 }
 
 function highlight(text, term){
   if(!term) return escapeHtml(text);
-  const idx = text.toUpperCase().indexOf(term);
-  if(idx === -1) return escapeHtml(text);
-  return escapeHtml(text.slice(0, idx)) + '<mark>' + escapeHtml(text.slice(idx, idx+term.length)) + '</mark>' + escapeHtml(text.slice(idx+term.length));
+  const re = new RegExp('(' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+  return escapeHtml(text).replace(re, '<mark>$1</mark>');
+}
+
+function search(raw){
+  const term = raw.trim().toUpperCase();
+  if(!term) return { term: '', matches: [] };
+  const matches = DATA.filter(emp => 
+    emp.name.toUpperCase().includes(term) || 
+    emp.id.toUpperCase().includes(term) || 
+    emp.uid.toUpperCase().includes(term)
+  ).sort((a, b) => score(b, term) - score(a, term));
+  return { term, matches };
 }
 
 function buildMessage(emp){
   const link = 'https://aquaclean-qatar.github.io/payslip';
-  return `Aqua Clean Payslip
+  // Added formatting as requested (* and _)
+  return `*Aqua Clean Payslip*
 Dear ${emp.name} (EMP ID: ${emp.id}),
 Your payslip is now available.
 To view your payslip, 
 click: ${link}
-UID: ${emp.uid}
-⚠️ For your security, never share your UID with anyone.`;
+*UID:* ${emp.uid}
+⚠️ _For your security, never share your UID with anyone._`;
 }
 
 function score(emp, term){
   const name = emp.name.toUpperCase();
   const id = emp.id.toUpperCase();
   const uid = emp.uid.toUpperCase();
-  if(id === term || uid === term) return 0;
-  if(name.startsWith(term)) return 1;
-  if(id.startsWith(term) || uid.startsWith(term)) return 2;
-  const nameWordStart = (' ' + name).includes(' ' + term);
-  if(nameWordStart) return 3;
-  return 4;
-}
-
-function search(term){
-  term = term.trim().toUpperCase();
-  if(!term){
-    return { term, matches: [] };
-  }
-  const matches = [];
-  for(let i=0;i<DATA.length;i++){
-    const emp = DATA[i];
-    if(emp.name.toUpperCase().includes(term) || emp.id.toUpperCase().includes(term) || emp.uid.toUpperCase().includes(term)){
-      matches.push(emp);
-    }
-  }
-  matches.sort((a,b) => score(a,term) - score(b,term) || a.name.localeCompare(b.name));
-  return { term, matches };
+  if(id === term || uid === term) return 100;
+  if(name === term) return 90;
+  if(id.startsWith(term) || uid.startsWith(term)) return 80;
+  if(name.startsWith(term)) return 70;
+  return 0;
 }
 
 function render(){
@@ -596,22 +924,44 @@ function render(){
     row.style.animationDelay = Math.min(i*6, 90) + 'ms';
     row.innerHTML = `
       <div class="row-left">
-        <div class="name">${highlight(emp.name, term)}</div>
+        <div class="name" title="Click to copy name">${highlight(emp.name, term)}</div>
         <div class="chips">
-          <span class="idchip">${highlight(emp.id, term)}</span>
-          <span class="idchip uid">${highlight(emp.uid, term)}</span>
+          <span class="idchip" title="Click to copy ID">${highlight(emp.id, term)}</span>
+          <span class="idchip uid" title="Click to copy UID">${highlight(emp.uid, term)}</span>
         </div>
       </div>
       <button class="copy-btn" type="button">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-        Copy
+        Copy Message
       </button>
     `;
-    const btn = row.querySelector('.copy-btn');
-    btn.addEventListener('click', (e) => {
+
+    // Individual copy listeners
+    const nameEl = row.querySelector('.name');
+    const idChip = row.querySelector('.idchip:not(.uid)');
+    const uidChip = row.querySelector('.idchip.uid');
+
+    nameEl.addEventListener('click', (e) => {
       e.stopPropagation();
-      copyEmployee(emp, row);
+      copyToClipboard(emp.name, 'Name copied: ' + emp.name);
     });
+
+    idChip.addEventListener('click', (e) => {
+      e.stopPropagation();
+      copyToClipboard(emp.id, 'ID copied: ' + emp.id);
+    });
+
+    uidChip.addEventListener('click', (e) => {
+      e.stopPropagation();
+      copyToClipboard(emp.uid, 'UID copied: ' + emp.uid);
+    });
+
+    // Whole row / Copy button copies the full message
+    row.addEventListener('click', () => {
+      const msg = buildMessage(emp);
+      copyToClipboard(msg, 'Copied full payslip message for ' + emp.name.split(' ')[0], row);
+    });
+
     frag.appendChild(row);
   });
   resultsEl.innerHTML = '';
@@ -623,24 +973,26 @@ function showToast(msg){
   toastText.textContent = msg;
   toast.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 1800);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
-function copyEmployee(emp, rowEl){
-  const msg = buildMessage(emp);
+function copyToClipboard(text, toastMsg, rowEl = null) {
   const finish = (ok) => {
     if(ok){
-      rowEl.classList.add('copied');
-      showToast('Copied payslip message for ' + emp.name.split(' ')[0]);
-      setTimeout(() => rowEl.classList.remove('copied'), 1200);
-    }else{
-      showToast('Copy failed — select text manually');
+      if(rowEl) {
+        rowEl.classList.add('copied');
+        setTimeout(() => rowEl.classList.remove('copied'), 1200);
+      }
+      showToast(toastMsg);
+    } else {
+      showToast('Copy failed — please select text manually');
     }
   };
+
   if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(msg).then(() => finish(true)).catch(() => fallbackCopy(msg, finish));
-  }else{
-    fallbackCopy(msg, finish);
+    navigator.clipboard.writeText(text).then(() => finish(true)).catch(() => fallbackCopy(text, finish));
+  } else {
+    fallbackCopy(text, finish);
   }
 }
 
@@ -649,7 +1001,8 @@ function fallbackCopy(text, cb){
     const ta = document.createElement('textarea');
     ta.value = text;
     ta.style.position = 'fixed';
-    ta.style.opacity = '0';
+    ta.style.left = '-9999px';
+    ta.style.top = '0';
     document.body.appendChild(ta);
     ta.focus();
     ta.select();
